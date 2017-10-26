@@ -1,0 +1,183 @@
+f_p0 [3]
+var T0
+param p0
+var t1
+t1 = call f_putint
+T0 = t1
+param p1
+var t2
+t2 = call f_putint
+T0 = t2
+param p2
+var t3
+t3 = call f_putint
+T0 = t3
+return 0
+end f_p0
+f_T4 [2]
+var T5
+var T6
+T5 = 1
+l0:
+var t7
+t7 = p1 + 1
+var t8
+t8 = T5 < t7
+if t8 ==0 goto l1
+var T9
+var t10
+t10 = 4 * T5
+t10 = p0[t10]
+T9 = t10
+param T9
+var t11
+t11 = call f_putint
+T6 = t11
+var t12
+t12 = T5 + 1
+T5 = t12
+goto l0
+l1:
+return 1
+end f_T4
+f_T13 [4]
+var T14
+var T15
+var t16
+t16 = p2 < p3
+if t16 ==0 goto l2
+var t17
+t17 = p2 + 1
+T14 = t17
+T15 = p3
+l3:
+var t18
+t18 = T14 < T15
+if t18 ==0 goto l4
+var t19
+t19 = 4 * T14
+t19 = p0[t19]
+var t20
+t20 = 4 * p2
+t20 = p0[t20]
+var t21
+t21 = t19 > t20
+if t21 ==0 goto l5
+var T22
+var t23
+t23 = 4 * T14
+t23 = p0[t23]
+T22 = t23
+var t24
+t24 = 4 * T15
+t24 = p0[t24]
+t25 = 4 * T14
+p0[t25] = t24
+t26 = 4 * T15
+p0[t26] = T22
+var t27
+t27 = T15 - 1
+T15 = t27
+goto l6
+l5:
+var t28
+t28 = T14 + 1
+T14 = t28
+l6:
+goto l3
+l4:
+var t29
+t29 = 4 * T14
+t29 = p0[t29]
+var t30
+t30 = 4 * p2
+t30 = p0[t30]
+var t31
+t31 = t30 - 1
+var t32
+t32 = t29 > t31
+if t32 ==0 goto l7
+var t33
+t33 = T14 - 1
+T14 = t33
+l7:
+var T34
+var t35
+t35 = 4 * p2
+t35 = p0[t35]
+T34 = t35
+var t36
+t36 = 4 * T14
+t36 = p0[t36]
+t37 = 4 * p2
+p0[t37] = t36
+t38 = 4 * T14
+p0[t38] = T34
+var T39
+param p0
+param p1
+param p2
+param T14
+var t40
+t40 = call f_T13
+T39 = t40
+param p0
+param p1
+param T15
+param p3
+var t41
+t41 = call f_T13
+T39 = t41
+return 1
+goto l8
+l2:
+return 1
+l8:
+end f_T13
+f_main [0]
+var T42
+var 80 T43
+var t44
+t44 = call f_getint
+T42 = t44
+var T45
+T45 = 1
+l9:
+var t46
+t46 = T42 + 1
+var t47
+t47 = T45 < t46
+if t47 ==0 goto l10
+var t48
+t48 = call f_getint
+t49 = 4 * T45
+T43[t49] = t48
+var t50
+t50 = T45 + 1
+T45 = t50
+goto l9
+l10:
+var T51
+param T43
+param T42
+var t52
+t52 = call f_T4
+T51 = t52
+var T53
+T53 = 1
+var T54
+T54 = T42
+param T43
+param T42
+param T53
+param T54
+var t55
+t55 = call f_T13
+T51 = t55
+param T43
+param T42
+var t56
+t56 = call f_T4
+T51 = t56
+return 0
+end f_main
