@@ -1,183 +1,306 @@
-f_p0 [3]
+var 17600264 p0
+var 800012 p1
+var 800012 p2
+var p3
+var 800012 p4
+var p5
+f_p6 [1]
 var T0
-param p0
-var t1
-t1 = call f_putint
-T0 = t1
-param p1
-var t2
-t2 = call f_putint
-T0 = t2
-param p2
-var t3
-t3 = call f_putint
-T0 = t3
-return 0
-end f_p0
-f_T4 [2]
-var T5
-var T6
-T5 = 1
+T0 = 0
 l0:
-var t7
-t7 = p1 + 1
-var t8
-t8 = T5 < t7
-if t8 ==0 goto l1
-var T9
-var t10
-t10 = 4 * T5
-t10 = p0[t10]
-T9 = t10
-param T9
-var t11
-t11 = call f_putint
-T6 = t11
-var t12
-t12 = T5 + 1
-T5 = t12
+var t1
+t1 = p0 != 0
+if t1 ==0 goto l1
+var t2
+t2 = p0 % 2
+t3 = 4 * T0
+p1[t3] = t2
+var t4
+t4 = T0 + 1
+T0 = t4
+var t5
+t5 = p0 / 2
+p0 = t5
 goto l0
 l1:
-return 1
-end f_T4
-f_T13 [4]
-var T14
+var T6
+T6 = T0
+l2:
+var t7
+t7 = T6 < 40
+if t7 ==0 goto l3
+t8 = 4 * T6
+p1[t8] = 0
+var t9
+t9 = T6 + 1
+T6 = t9
+goto l2
+l3:
+return T0
+end f_p6
+f_T10 [2]
+var 160 T11
+var 160 T12
+param p0
+param T11
+var t13
+t13 = call f_p6
+param p1
+param T12
+var t14
+t14 = call f_p6
 var T15
 var t16
-t16 = p2 < p3
-if t16 ==0 goto l2
-var t17
-t17 = p2 + 1
-T14 = t17
-T15 = p3
-l3:
+t16 = 40 - 1
+T15 = t16
+var T17
+T17 = 0
+l4:
 var t18
-t18 = T14 < T15
-if t18 ==0 goto l4
+t18 = - 1
 var t19
-t19 = 4 * T14
-t19 = p0[t19]
+t19 = T15 != t18
+if t19 ==0 goto l5
 var t20
-t20 = 4 * p2
-t20 = p0[t20]
+t20 = 4 * T15
+t20 = T11[t20]
 var t21
-t21 = t19 > t20
-if t21 ==0 goto l5
-var T22
+t21 = 4 * T15
+t21 = T12[t21]
+var t22
+t22 = t20 + t21
 var t23
-t23 = 4 * T14
-t23 = p0[t23]
-T22 = t23
+t23 = t22 == 1
+if t23 ==0 goto l6
 var t24
-t24 = 4 * T15
-t24 = p0[t24]
-t25 = 4 * T14
-p0[t25] = t24
-t26 = 4 * T15
-p0[t26] = T22
+t24 = T17 * 2
+var t25
+t25 = t24 + 1
+T17 = t25
+goto l7
+l6:
+var t26
+t26 = T17 * 2
+T17 = t26
+l7:
 var t27
 t27 = T15 - 1
 T15 = t27
-goto l6
+goto l4
 l5:
-var t28
-t28 = T14 + 1
-T14 = t28
-l6:
-goto l3
-l4:
-var t29
-t29 = 4 * T14
-t29 = p0[t29]
-var t30
-t30 = 4 * p2
-t30 = p0[t30]
-var t31
-t31 = t30 - 1
-var t32
-t32 = t29 > t31
-if t32 ==0 goto l7
-var t33
-t33 = T14 - 1
-T14 = t33
-l7:
-var T34
-var t35
-t35 = 4 * p2
-t35 = p0[t35]
-T34 = t35
-var t36
-t36 = 4 * T14
-t36 = p0[t36]
-t37 = 4 * p2
-p0[t37] = t36
-t38 = 4 * T14
-p0[t38] = T34
-var T39
-param p0
-param p1
-param p2
-param T14
-var t40
-t40 = call f_T13
-T39 = t40
-param p0
-param p1
-param T15
-param p3
-var t41
-t41 = call f_T13
-T39 = t41
-return 1
-goto l8
-l2:
-return 1
+return T17
+end f_T10
+f_T28 [1]
+var T29
+T29 = 1
 l8:
-end f_T13
-f_main [0]
-var T42
-var 80 T43
-var t44
-t44 = call f_getint
-T42 = t44
-var T45
-T45 = 1
+var t30
+t30 = T29 < 22
+if t30 ==0 goto l9
+var t31
+t31 = p0 * 22
+var t32
+t32 = t31 + T29
+var t33
+t33 = p0 * 22
+var t34
+t34 = t33 + T29
+var t35
+t35 = t34 - 1
+var t36
+t36 = 4 * t35
+t36 = p0[t36]
+var t37
+t37 = t36 * 22
+var t38
+t38 = t37 + T29
+var t39
+t39 = t38 - 1
+var t40
+t40 = 4 * t39
+t40 = p0[t40]
+t41 = 4 * t32
+p0[t41] = t40
+var t42
+t42 = T29 + 1
+T29 = t42
+goto l8
 l9:
-var t46
-t46 = T42 + 1
-var t47
-t47 = T45 < t46
-if t47 ==0 goto l10
-var t48
-t48 = call f_getint
-t49 = 4 * T45
-T43[t49] = t48
-var t50
-t50 = T45 + 1
-T45 = t50
-goto l9
+return 0
+end f_T28
+f_T43 [2]
+var T44
+T44 = 21
+var T45
+T45 = 2097152
 l10:
-var T51
-param T43
-param T42
+if p1 ==0 goto l11
+l12:
+var t46
+t46 = T45 > p1
+if t46 ==0 goto l13
+var t47
+t47 = T44 - 1
+T44 = t47
+var t48
+t48 = T45 / 2
+T45 = t48
+goto l12
+l13:
+var t49
+t49 = p1 - T45
+p1 = t49
+var t50
+t50 = p0 * 22
+var t51
+t51 = t50 + T44
 var t52
-t52 = call f_T4
-T51 = t52
-var T53
-T53 = 1
+t52 = 4 * t51
+t52 = p0[t52]
+p0 = t52
+goto l10
+l11:
+var t53
+t53 = 4 * p0
+t53 = p1[t53]
+return t53
+end f_T43
+f_main [0]
 var T54
-T54 = T42
-param T43
-param T42
-param T53
-param T54
 var t55
-t55 = call f_T13
-T51 = t55
-param T43
-param T42
+t55 = call f_getint
+T54 = t55
+l14:
 var t56
-t56 = call f_T4
-T51 = t56
+t56 = T54 != 0
+if t56 ==0 goto l15
+var t57
+t57 = T54 - 1
+T54 = t57
+var t58
+t58 = call f_getint
+p3 = t58
+var T59
+T59 = 0
+p5 = 1
+var T60
+T60 = 1
+var T61
+T61 = 1
+l16:
+var t62
+t62 = p3 + 1
+var t63
+t63 = T61 < t62
+if t63 ==0 goto l17
+var T64
+var T65
+var t66
+t66 = call f_getint
+T64 = t66
+var t67
+t67 = call f_getint
+T65 = t67
+param T64
+param T59
+var t68
+t68 = call f_T10
+T64 = t68
+param T65
+param T59
+var t69
+t69 = call f_T10
+T65 = t69
+var t70
+t70 = T64 == 1
+if t70 ==0 goto l18
+t71 = 4 * T60
+p4[t71] = p5
+t72 = 4 * p5
+p1[t72] = T65
+var t73
+t73 = p5 * 22
+var t74
+t74 = T60 - 1
+var t75
+t75 = 4 * t74
+t75 = p4[t75]
+t76 = 4 * t73
+p0[t76] = t75
+var t77
+t77 = T60 - 1
+var t78
+t78 = 4 * t77
+t78 = p4[t78]
+var t79
+t79 = 4 * t78
+t79 = p2[t79]
+var t80
+t80 = t79 + 1
+t81 = 4 * p5
+p2[t81] = t80
+param p5
+var t82
+t82 = call f_T28
+var t83
+t83 = p5 + 1
+p5 = t83
+var t84
+t84 = T60 + 1
+T60 = t84
+goto l19
+l18:
+var t85
+t85 = T64 == 2
+if t85 ==0 goto l20
+var t86
+t86 = T60 - 1
+var t87
+t87 = t86 - T65
+var t88
+t88 = 4 * t87
+t88 = p4[t88]
+t89 = 4 * T60
+p4[t89] = t88
+var t90
+t90 = T60 + 1
+T60 = t90
+goto l21
+l20:
+var t91
+t91 = T60 - 1
+var t92
+t92 = 4 * t91
+t92 = p4[t92]
+param t92
+var t93
+t93 = T60 - 1
+var t94
+t94 = 4 * t93
+t94 = p4[t94]
+var t95
+t95 = 4 * t94
+t95 = p2[t95]
+var t96
+t96 = t95 - T65
+param t96
+var t97
+t97 = call f_T43
+T59 = t97
+param T59
+var t98
+t98 = call f_putint
+param 10
+var t99
+t99 = call f_putchar
+l21:
+l19:
+var t100
+t100 = T61 + 1
+T61 = t100
+goto l16
+l17:
+goto l14
+l15:
 return 0
 end f_main

@@ -33,7 +33,7 @@ string findVar(Env* env,string name);
 string getNewFuncVar(Env* env,int& glbid);
 string getNewTmpVar(Env* env,int& glbid);
 string getNewOriVar(Env* env,int& glbid);
-void decl(string a);
+void decl(Env* env,string a);
 void assign(string a,string b);
 /* procedure printTree prints a syntax tree to the
  * listing file using indentation to indicate subtrees

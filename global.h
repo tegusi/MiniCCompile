@@ -75,5 +75,6 @@ typedef struct environment
   {
     struct environment* pre;
     map<string,string> symTable;
+    map<string,string> declList;
     int varCnt;
   } Env;

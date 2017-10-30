@@ -16,6 +16,8 @@ identifier  {letter}({letter}|{digit})*
 whitespace  [ \t\v\n\f]+
 
 %%
+
+"\n"            {yylineno++;}
 "if"            {return IF;}
 "then"          {return THEN;}
 "else"          {return ELSE;}
@@ -41,6 +43,7 @@ whitespace  [ \t\v\n\f]+
 "*"             {return TIMES;}
 "/"             {return OVER;}
 "%"             {return MOD;}
+"!"             {return '!';}
 "("             {return '(';}
 ")"             {return ')';}
 "{"             {return '{';}
@@ -49,7 +52,6 @@ whitespace  [ \t\v\n\f]+
 ","             {return ',';}
 {number}        {return INTEGER;}
 {identifier}    {return IDENTIFIER;}
-"\n"            {yylineno++;}
 {whitespace}    {/* skip whitespace */}
 .               {/* skip else */}
 

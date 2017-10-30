@@ -39,8 +39,8 @@ DefnDeclList :
   ;
 
 VarDefn :
-  Type Identifier ';' {decl($2);}
-  | Type Identifier '[' Integer {decl(to_string(4 * stoi($4)) + " " + $2);} ']' ';'
+  Type Identifier ';' {decl(nowEnv,$2);}
+  | Type Identifier '[' Integer {decl(nowEnv,to_string(4 * stoi($4)) + " " + $2);} ']' ';'
   ;
 
 VarDecl :
@@ -126,6 +126,7 @@ Statement:
   }
   | Identifier '=' Expression ';'
   { assign($1,$3); }
+  | Expression ';'
   | Identifier '[' Expression ']' '=' Expression ';'
   {
     string varId = getNewTmpVar(nowEnv, glb_id);
@@ -159,7 +160,7 @@ StatementLine:
 p1Expression :
   Integer { $$ = $1; }
   | Identifier {$$ = $1;}
-  | '!' p1Expression
+  | NOT p1Expression
   {
     string varId = getNewTmpVar(nowEnv, glb_id);
     cout<<"var "<<varId<<endl;
@@ -290,17 +291,22 @@ Expression :
   ;
 
 IdenList :
-  Integer
-  {cout<<"param "<<$1<<endl;}
-  |
-  Identifier
+  // Integer
+  // {cout<<"param "<<$1<<endl;}
+  // |
+  // Identifier
+  // {cout<<"param "<<$1<<endl;}
+  // |
+  Expression
   {cout<<"param "<<$1<<endl;}
     // {$$ = newExpNode(IdK);$$->sibling = NULL;}
-  | IdenList ',' Identifier
+  // | IdenList ',' Identifier
+  // {cout<<"param "<<$3<<endl;}
+  // | IdenList ',' Integer
+  // {cout<<"param "<<$3<<endl;}
+  //   // {$$ = newExpNode(IdK);$1->sibling = $3;$3->sibling = NULL;$$->sibling = $1;}
+  | IdenList ',' Expression
   {cout<<"param "<<$3<<endl;}
-  | IdenList ',' Integer
-  {cout<<"param "<<$3<<endl;}
-    // {$$ = newExpNode(IdK);$1->sibling = $3;$3->sibling = NULL;$$->sibling = $1;}
   |
   ;
 
