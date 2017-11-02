@@ -14,6 +14,7 @@ int glb_cnt;
 int glb_id;
 int glb_lbl_id;
 int isParam;
+int isDecl;
 string rsvWord[] = {"getint","putchar","putint","getchar","main"};
 %}
 
@@ -39,15 +40,15 @@ DefnDeclList :
   ;
 
 VarDefn :
-  Type Identifier ';' {decl(nowEnv,$2);}
-  | Type Identifier '[' Integer {decl(nowEnv,to_string(4 * stoi($4)) + " " + $2);} ']' ';'
+  Type Identifier ';' {decl(nowEnv,$2);isDecl = 0;}
+  | Type Identifier '[' Integer {decl(nowEnv,to_string(4 * stoi($4)) + " " + $2);isDecl = 0;} ']' ';'
   ;
 
 VarDecl :
   Type Identifier
-  {$$ = $2;}
+  {$$ = $2;isDecl = 0;}
   | Type Identifier '[' Integer ']'
-  {$$ = $2;}
+  {$$ = $2;isDecl = 0;}
   ;
 
 FuncDefn :
@@ -58,6 +59,7 @@ FuncDefn :
       cout<<"f_"<<$2<<" [0]"<<endl;
     else
       cout<<"f_"<<$2<<" ["<<nowEnv->symTable.size()<<"]"<<endl;
+    isDecl = 0;
   }
   '{'FuncBody'}'
   {cout<<"end f_"<<$2<<endl;nowEnv=nowEnv->pre;}
@@ -68,23 +70,17 @@ FuncDecl :
   {
     // nowEnv->symTable.insert(maps($2,getNewOriVar(nowEnv, glb_id)));
     nowEnv = nowEnv->pre;
+    isDecl = 0;
+    isParam = 0;
   }
   ;
 
 ParaList :
   {nowEnv = newEnv(nowEnv);isParam = 1;}
   VarDecl
-  {
-    // nowEnv->symTable[$1] = 'p' + to_string(nowEnv->varCnt);
-  }
   | ParaList ',' VarDecl
-  {
-    // string varId = getNewFuncVar(nowEnv, glb_id);
-    // nowEnv->symTable.insert(maps($3,varId));
-    // nowEnv->symTable[$3] = 'p' + to_string(nowEnv->varCnt);
-  }
   |
-  { nowEnv = newEnv(nowEnv); }
+  { nowEnv = newEnv(nowEnv);isParam = 1;}
   ;
 
 FuncBody :
@@ -94,7 +90,7 @@ FuncBody :
   ;
 
 Type :
-  INT
+  INT {isDecl = 1;}
   ;
 
 Statement:
@@ -102,7 +98,7 @@ Statement:
   | IF '(' Expression ')'
   {
     string L1 = to_string(glb_lbl_id++);
-    cout<<"if "<<$3<<" ==0 goto l"<<L1<<endl;
+    cout<<"if "<<$3<<" == 0 goto l"<<L1<<endl;
     $3 = L1;
   }
   Statement
@@ -116,7 +112,7 @@ Statement:
   '(' Expression ')'
   {
     string L2 = to_string(glb_lbl_id++);
-    cout<<"if "<<$4<<" ==0 goto l"<<L2<<endl;
+    cout<<"if "<<$4<<" == 0 goto l"<<L2<<endl;
     $4 = L2;
   }
   Statement
@@ -325,14 +321,24 @@ Identifier : IDENTIFIER
         }
     if(flag)
     {
-      if((varId = findVar(nowEnv,string(tokenString))) != "")
-        $$ = varId;
-      else
+      if(isDecl)
       {
         if(isParam) varId = getNewFuncVar(nowEnv,glb_id);
         else varId = getNewOriVar(nowEnv,glb_id);
         nowEnv->symTable.insert(maps(string(tokenString),varId));
         $$ = varId;
+      }
+      else
+      {
+        if((varId = findVar(nowEnv,string(tokenString))) != "")
+          $$ = varId;
+        else
+        {
+          if(isParam) varId = getNewFuncVar(nowEnv,glb_id);
+          else varId = getNewOriVar(nowEnv,glb_id);
+          nowEnv->symTable.insert(maps(string(tokenString),varId));
+          $$ = varId;
+        }
       }
     }
     // $$ = newExpNode(IdK);$$->attr.name = copyString(tokenString);
@@ -354,6 +360,7 @@ TreeNode * parse(void)
 int main() {
   glb_id = 0;
   isParam = 0;
+  isDecl = 0;
   nowEnv = newEnv(NULL);
   parse();
   return 0;

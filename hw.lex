@@ -43,7 +43,6 @@ whitespace  [ \t\v\n\f]+
 "*"             {return TIMES;}
 "/"             {return OVER;}
 "%"             {return MOD;}
-"!"             {return '!';}
 "("             {return '(';}
 ")"             {return ')';}
 "{"             {return '{';}
