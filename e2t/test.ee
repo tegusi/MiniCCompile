@@ -1,0 +1,97 @@
+var 400 T0
+var T1
+f_T2 [2]
+var T3
+var t4
+t4 = 4 * p0
+t4 = T0[t4]
+T3 = t4
+var t5
+t5 = 4 * p1
+t5 = T0[t5]
+var t6
+t6 = 4 * p0
+T0[t6] = t5
+var t7
+t7 = 4 * p1
+T0[t7] = T3
+return 0
+end f_T2
+f_main [0]
+var t8
+t8 = call f_getint
+T1 = t8
+var T9
+T9 = 0
+l0:
+var t10
+t10 = T9 < T1
+if t10 == 0 goto l1
+var t11
+t11 = call f_getint
+var t12
+t12 = 4 * T9
+T0[t12] = t11
+var t13
+t13 = T9 + 1
+T9 = t13
+goto l0
+l1:
+var T14
+T9 = 0
+l2:
+var t15
+t15 = T9 < T1
+if t15 == 0 goto l3
+var t16
+t16 = T9 + 1
+T14 = t16
+l4:
+var t17
+t17 = T14 < T1
+if t17 == 0 goto l5
+var t18
+t18 = 4 * T9
+t18 = T0[t18]
+var t19
+t19 = 4 * T14
+t19 = T0[t19]
+var t20
+t20 = t18 > t19
+if t20 == 0 goto l6
+param T9
+param T14
+var t21
+t21 = call f_T2
+l6:
+var t22
+t22 = T14 + 1
+T14 = t22
+goto l4
+l5:
+var t23
+t23 = T9 + 1
+T9 = t23
+goto l2
+l3:
+T9 = 0
+l7:
+var t24
+t24 = T9 < T1
+if t24 == 0 goto l8
+var t25
+t25 = 4 * T9
+t25 = T0[t25]
+param t25
+var t26
+t26 = call f_putint
+param 10
+var t27
+t27 = call f_putchar
+var t28
+t28 = T9 + 1
+T9 = t28
+goto l7
+l8:
+return 0
+end f_main

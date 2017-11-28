@@ -126,6 +126,7 @@ Statement:
   | Identifier '[' Expression ']' '=' Expression ';'
   {
     string varId = getNewTmpVar(nowEnv, glb_id);
+    cout<<"var "<<varId<<endl;
     assign(varId,"4 * " + $3);
     cout<<$1+"["+varId+"] = "+$6<<endl;
   }
@@ -341,7 +342,6 @@ Identifier : IDENTIFIER
         }
       }
     }
-    // $$ = newExpNode(IdK);$$->attr.name = copyString(tokenString);
   };
 %%
 void yyerror(const char *s)

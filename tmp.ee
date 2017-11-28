@@ -1,36 +1,147 @@
 var T0
-var T1
-f_T2 [1]
-param p0
-var t3
-t3 = call f_putint
-T1 = t3
-p0 = 10
-param p0
-var t4
-t4 = call f_putchar
-T1 = t4
-return 0
-end f_T2
 f_main [0]
-var t5
-t5 = call f_getint
-T0 = t5
-var t6
-t6 = T0 > 5
-if t6 == 0 goto l0
+var T1
+var T2
+var T3
+var T4
+var T5
+var T6
 var T7
-var t8
-t8 = call f_getint
-T7 = t8
-param T7
-var t9
-t9 = call f_T2
-T1 = t9
+var T8
+var T9
+var T10
+var T11
+var T12
+var T13
+var T14
+var T15
+var T16
+var T17
+var T18
+var T19
+var T20
+var T21
+var T22
+var T23
+var T24
+var T25
+var T26
+var T27
+var t28
+t28 = call f_getint
+T27 = t28
 l0:
-param T0
-var t10
-t10 = call f_T2
-T1 = t10
-return 0
+var t29
+t29 = T27 == 5
+if t29 == 0 goto l1
+var t30
+t30 = T27 + 1
+T27 = t30
+goto l0
+l1:
+T1 = 0
+T2 = 0
+T3 = 0
+T4 = 0
+T5 = 0
+T6 = 0
+T7 = 0
+T8 = 0
+T9 = 0
+T10 = 0
+T11 = 0
+T12 = 0
+T13 = 0
+T14 = 0
+T15 = 0
+T16 = 0
+T17 = 0
+T18 = 0
+T19 = 0
+T20 = 0
+T21 = 0
+T22 = 0
+T23 = 0
+T24 = 0
+T25 = 0
+T26 = 0
+var t31
+t31 = T1 + 1
+T2 = t31
+var t32
+t32 = T2 + 1
+T3 = t32
+var t33
+t33 = T3 + 1
+T4 = t33
+var t34
+t34 = T4 + 1
+T5 = t34
+var t35
+t35 = T5 + 1
+T6 = t35
+var t36
+t36 = T6 + 1
+T7 = t36
+var t37
+t37 = T7 + 1
+T8 = t37
+var t38
+t38 = T8 + 1
+T9 = t38
+var t39
+t39 = T9 + 1
+T10 = t39
+var t40
+t40 = T10 + 1
+T11 = t40
+var t41
+t41 = T11 + 1
+T12 = t41
+var t42
+t42 = T12 + 1
+T13 = t42
+var t43
+t43 = T13 + 1
+T14 = t43
+var t44
+t44 = T14 + 1
+T15 = t44
+var t45
+t45 = T15 + 1
+T16 = t45
+var t46
+t46 = T16 + 1
+T17 = t46
+var t47
+t47 = T17 + 1
+T18 = t47
+var t48
+t48 = T18 + 1
+T19 = t48
+var t49
+t49 = T19 + 1
+T20 = t49
+var t50
+t50 = T20 + 1
+T21 = t50
+var t51
+t51 = T21 + 1
+T22 = t51
+var t52
+t52 = T22 + 1
+T23 = t52
+var t53
+t53 = T23 + 1
+T24 = t53
+var t54
+t54 = T24 + 1
+T25 = t54
+var t55
+t55 = T25 + 1
+T26 = t55
+param T26
+var t56
+t56 = call f_putint
+return T26
 end f_main

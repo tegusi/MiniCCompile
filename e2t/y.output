@@ -1,0 +1,579 @@
+Terminals which are not used
+
+   FUNC
+
+
+Grammar
+
+    0 $accept: Program $end
+
+    1 Program: Program FuncDecl
+    2        | Program VarDecl
+    3        | Program END
+    4        | /* empty */
+
+    5 VarDecl: VAR INTEGER Variable
+
+    6 FuncDecl: Function '[' INTEGER ']' Statement END Function
+
+    7 Statement: Statement Expression
+    8          | Statement VarDecl
+    9          | VarDecl
+   10          | Expression
+
+   11 Expression: Variable '=' RightValue OP RightValue
+   12           | Variable '=' OP RightValue
+   13           | Variable '=' RightValue
+   14           | Variable '[' RightValue ']' '=' RightValue
+   15           | Variable '=' Variable '[' RightValue ']'
+   16           | IF RightValue LogicalOP RightValue GOTO LABEL
+   17           | GOTO LABEL
+   18           | LABEL ':'
+   19           | PARAM RightValue
+   20           | Variable '=' CALL Function
+   21           | RETURN RightValue
+
+   22 RightValue: Variable
+   23           | INTEGER
+
+   24 Variable: VARIABLE
+
+   25 Function: FUNCTION
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+':' (58) 18
+'=' (61) 11 12 13 14 15 20
+'[' (91) 6 14 15
+']' (93) 6 14 15
+error (256)
+OP (258) 11 12
+LogicalOP (259) 16
+VAR (260) 5
+FUNC (261)
+RETURN (262) 21
+CALL (263) 20
+END (264) 3 6
+PARAM (265) 19
+LABEL (266) 16 17 18
+IF (267) 16
+GOTO (268) 16 17
+FUNCTION (269) 25
+VARIABLE (270) 24
+INTEGER (271) 5 6 23
+
+
+Nonterminals, with rules where they appear
+
+$accept (21)
+    on left: 0
+Program (22)
+    on left: 1 2 3 4, on right: 0 1 2 3
+VarDecl (23)
+    on left: 5, on right: 2 8 9
+FuncDecl (24)
+    on left: 6, on right: 1
+Statement (25)
+    on left: 7 8 9 10, on right: 6 7 8
+Expression (26)
+    on left: 11 12 13 14 15 16 17 18 19 20 21, on right: 7 10
+RightValue (27)
+    on left: 22 23, on right: 11 12 13 14 15 16 19 21
+Variable (28)
+    on left: 24, on right: 5 11 12 13 14 15 20 22
+Function (29)
+    on left: 25, on right: 6 20
+
+
+state 0
+
+    0 $accept: . Program $end
+
+    $default  reduce using rule 4 (Program)
+
+    Program  go to state 1
+
+
+state 1
+
+    0 $accept: Program . $end
+    1 Program: Program . FuncDecl
+    2        | Program . VarDecl
+    3        | Program . END
+
+    $end      shift, and go to state 2
+    VAR       shift, and go to state 3
+    END       shift, and go to state 4
+    FUNCTION  shift, and go to state 5
+
+    VarDecl   go to state 6
+    FuncDecl  go to state 7
+    Function  go to state 8
+
+
+state 2
+
+    0 $accept: Program $end .
+
+    $default  accept
+
+
+state 3
+
+    5 VarDecl: VAR . INTEGER Variable
+
+    INTEGER  shift, and go to state 9
+
+
+state 4
+
+    3 Program: Program END .
+
+    $default  reduce using rule 3 (Program)
+
+
+state 5
+
+   25 Function: FUNCTION .
+
+    $default  reduce using rule 25 (Function)
+
+
+state 6
+
+    2 Program: Program VarDecl .
+
+    $default  reduce using rule 2 (Program)
+
+
+state 7
+
+    1 Program: Program FuncDecl .
+
+    $default  reduce using rule 1 (Program)
+
+
+state 8
+
+    6 FuncDecl: Function . '[' INTEGER ']' Statement END Function
+
+    '['  shift, and go to state 10
+
+
+state 9
+
+    5 VarDecl: VAR INTEGER . Variable
+
+    VARIABLE  shift, and go to state 11
+
+    Variable  go to state 12
+
+
+state 10
+
+    6 FuncDecl: Function '[' . INTEGER ']' Statement END Function
+
+    INTEGER  shift, and go to state 13
+
+
+state 11
+
+   24 Variable: VARIABLE .
+
+    $default  reduce using rule 24 (Variable)
+
+
+state 12
+
+    5 VarDecl: VAR INTEGER Variable .
+
+    $default  reduce using rule 5 (VarDecl)
+
+
+state 13
+
+    6 FuncDecl: Function '[' INTEGER . ']' Statement END Function
+
+    ']'  shift, and go to state 14
+
+
+state 14
+
+    6 FuncDecl: Function '[' INTEGER ']' . Statement END Function
+
+    VAR       shift, and go to state 3
+    RETURN    shift, and go to state 15
+    PARAM     shift, and go to state 16
+    LABEL     shift, and go to state 17
+    IF        shift, and go to state 18
+    GOTO      shift, and go to state 19
+    VARIABLE  shift, and go to state 11
+
+    VarDecl     go to state 20
+    Statement   go to state 21
+    Expression  go to state 22
+    Variable    go to state 23
+
+
+state 15
+
+   21 Expression: RETURN . RightValue
+
+    VARIABLE  shift, and go to state 11
+    INTEGER   shift, and go to state 24
+
+    RightValue  go to state 25
+    Variable    go to state 26
+
+
+state 16
+
+   19 Expression: PARAM . RightValue
+
+    VARIABLE  shift, and go to state 11
+    INTEGER   shift, and go to state 24
+
+    RightValue  go to state 27
+    Variable    go to state 26
+
+
+state 17
+
+   18 Expression: LABEL . ':'
+
+    ':'  shift, and go to state 28
+
+
+state 18
+
+   16 Expression: IF . RightValue LogicalOP RightValue GOTO LABEL
+
+    VARIABLE  shift, and go to state 11
+    INTEGER   shift, and go to state 24
+
+    RightValue  go to state 29
+    Variable    go to state 26
+
+
+state 19
+
+   17 Expression: GOTO . LABEL
+
+    LABEL  shift, and go to state 30
+
+
+state 20
+
+    9 Statement: VarDecl .
+
+    $default  reduce using rule 9 (Statement)
+
+
+state 21
+
+    6 FuncDecl: Function '[' INTEGER ']' Statement . END Function
+    7 Statement: Statement . Expression
+    8          | Statement . VarDecl
+
+    VAR       shift, and go to state 3
+    RETURN    shift, and go to state 15
+    END       shift, and go to state 31
+    PARAM     shift, and go to state 16
+    LABEL     shift, and go to state 17
+    IF        shift, and go to state 18
+    GOTO      shift, and go to state 19
+    VARIABLE  shift, and go to state 11
+
+    VarDecl     go to state 32
+    Expression  go to state 33
+    Variable    go to state 23
+
+
+state 22
+
+   10 Statement: Expression .
+
+    $default  reduce using rule 10 (Statement)
+
+
+state 23
+
+   11 Expression: Variable . '=' RightValue OP RightValue
+   12           | Variable . '=' OP RightValue
+   13           | Variable . '=' RightValue
+   14           | Variable . '[' RightValue ']' '=' RightValue
+   15           | Variable . '=' Variable '[' RightValue ']'
+   20           | Variable . '=' CALL Function
+
+    '['  shift, and go to state 34
+    '='  shift, and go to state 35
+
+
+state 24
+
+   23 RightValue: INTEGER .
+
+    $default  reduce using rule 23 (RightValue)
+
+
+state 25
+
+   21 Expression: RETURN RightValue .
+
+    $default  reduce using rule 21 (Expression)
+
+
+state 26
+
+   22 RightValue: Variable .
+
+    $default  reduce using rule 22 (RightValue)
+
+
+state 27
+
+   19 Expression: PARAM RightValue .
+
+    $default  reduce using rule 19 (Expression)
+
+
+state 28
+
+   18 Expression: LABEL ':' .
+
+    $default  reduce using rule 18 (Expression)
+
+
+state 29
+
+   16 Expression: IF RightValue . LogicalOP RightValue GOTO LABEL
+
+    LogicalOP  shift, and go to state 36
+
+
+state 30
+
+   17 Expression: GOTO LABEL .
+
+    $default  reduce using rule 17 (Expression)
+
+
+state 31
+
+    6 FuncDecl: Function '[' INTEGER ']' Statement END . Function
+
+    FUNCTION  shift, and go to state 5
+
+    Function  go to state 37
+
+
+state 32
+
+    8 Statement: Statement VarDecl .
+
+    $default  reduce using rule 8 (Statement)
+
+
+state 33
+
+    7 Statement: Statement Expression .
+
+    $default  reduce using rule 7 (Statement)
+
+
+state 34
+
+   14 Expression: Variable '[' . RightValue ']' '=' RightValue
+
+    VARIABLE  shift, and go to state 11
+    INTEGER   shift, and go to state 24
+
+    RightValue  go to state 38
+    Variable    go to state 26
+
+
+state 35
+
+   11 Expression: Variable '=' . RightValue OP RightValue
+   12           | Variable '=' . OP RightValue
+   13           | Variable '=' . RightValue
+   15           | Variable '=' . Variable '[' RightValue ']'
+   20           | Variable '=' . CALL Function
+
+    OP        shift, and go to state 39
+    CALL      shift, and go to state 40
+    VARIABLE  shift, and go to state 11
+    INTEGER   shift, and go to state 24
+
+    RightValue  go to state 41
+    Variable    go to state 42
+
+
+state 36
+
+   16 Expression: IF RightValue LogicalOP . RightValue GOTO LABEL
+
+    VARIABLE  shift, and go to state 11
+    INTEGER   shift, and go to state 24
+
+    RightValue  go to state 43
+    Variable    go to state 26
+
+
+state 37
+
+    6 FuncDecl: Function '[' INTEGER ']' Statement END Function .
+
+    $default  reduce using rule 6 (FuncDecl)
+
+
+state 38
+
+   14 Expression: Variable '[' RightValue . ']' '=' RightValue
+
+    ']'  shift, and go to state 44
+
+
+state 39
+
+   12 Expression: Variable '=' OP . RightValue
+
+    VARIABLE  shift, and go to state 11
+    INTEGER   shift, and go to state 24
+
+    RightValue  go to state 45
+    Variable    go to state 26
+
+
+state 40
+
+   20 Expression: Variable '=' CALL . Function
+
+    FUNCTION  shift, and go to state 5
+
+    Function  go to state 46
+
+
+state 41
+
+   11 Expression: Variable '=' RightValue . OP RightValue
+   13           | Variable '=' RightValue .
+
+    OP  shift, and go to state 47
+
+    $default  reduce using rule 13 (Expression)
+
+
+state 42
+
+   15 Expression: Variable '=' Variable . '[' RightValue ']'
+   22 RightValue: Variable .
+
+    '['  shift, and go to state 48
+
+    $default  reduce using rule 22 (RightValue)
+
+
+state 43
+
+   16 Expression: IF RightValue LogicalOP RightValue . GOTO LABEL
+
+    GOTO  shift, and go to state 49
+
+
+state 44
+
+   14 Expression: Variable '[' RightValue ']' . '=' RightValue
+
+    '='  shift, and go to state 50
+
+
+state 45
+
+   12 Expression: Variable '=' OP RightValue .
+
+    $default  reduce using rule 12 (Expression)
+
+
+state 46
+
+   20 Expression: Variable '=' CALL Function .
+
+    $default  reduce using rule 20 (Expression)
+
+
+state 47
+
+   11 Expression: Variable '=' RightValue OP . RightValue
+
+    VARIABLE  shift, and go to state 11
+    INTEGER   shift, and go to state 24
+
+    RightValue  go to state 51
+    Variable    go to state 26
+
+
+state 48
+
+   15 Expression: Variable '=' Variable '[' . RightValue ']'
+
+    VARIABLE  shift, and go to state 11
+    INTEGER   shift, and go to state 24
+
+    RightValue  go to state 52
+    Variable    go to state 26
+
+
+state 49
+
+   16 Expression: IF RightValue LogicalOP RightValue GOTO . LABEL
+
+    LABEL  shift, and go to state 53
+
+
+state 50
+
+   14 Expression: Variable '[' RightValue ']' '=' . RightValue
+
+    VARIABLE  shift, and go to state 11
+    INTEGER   shift, and go to state 24
+
+    RightValue  go to state 54
+    Variable    go to state 26
+
+
+state 51
+
+   11 Expression: Variable '=' RightValue OP RightValue .
+
+    $default  reduce using rule 11 (Expression)
+
+
+state 52
+
+   15 Expression: Variable '=' Variable '[' RightValue . ']'
+
+    ']'  shift, and go to state 55
+
+
+state 53
+
+   16 Expression: IF RightValue LogicalOP RightValue GOTO LABEL .
+
+    $default  reduce using rule 16 (Expression)
+
+
+state 54
+
+   14 Expression: Variable '[' RightValue ']' '=' RightValue .
+
+    $default  reduce using rule 14 (Expression)
+
+
+state 55
+
+   15 Expression: Variable '=' Variable '[' RightValue ']' .
+
+    $default  reduce using rule 15 (Expression)
