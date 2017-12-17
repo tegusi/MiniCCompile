@@ -1,10 +1,9 @@
-all: a.out
+all:
+	$(MAKE) -C minic2eeyore all
+	$(MAKE) -C eeyore2tigger all
+	$(MAKE) -C tigger2riscv all
 
-a.out: lex.yy.c y.tab.c util.c
-	g++ --std=c++11 -o a.out lex.yy.c y.tab.c util.c
-lex.yy.c: hw.lex
-	flex hw.lex
-y.tab.c y.tab.h: hw.y
-	yacc -d hw.y
 clean:
-	rm a.out y.tab.c y.tab.h lex.yy.c
+	-$(MAKE) -C minic2eeyore clean
+	-$(MAKE) -C eeyore2tigger clean
+	-$(MAKE) -C tigger2riscv clean

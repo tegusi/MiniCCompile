@@ -1,0 +1,380 @@
+.comm v0,1600,4
+  .global v1
+  .section .sdata
+  .align 2
+  .type v1, @object
+  .size v1, 4
+v1:
+  .word 0
+  .text
+  .align 2
+  .global f_T2
+  .type f_T2, @function
+f_T2:
+  add sp,sp,-80
+  sw ra,76(sp)
+  sw s0,0(sp)
+  sw s1,4(sp)
+  sw s2,8(sp)
+  sw s3,12(sp)
+  sw s4,16(sp)
+  sw s5,20(sp)
+  sw s6,24(sp)
+  sw s7,28(sp)
+  sw s8,32(sp)
+  mv t1,a0
+  mv t2,a1
+  mv t3,a2
+  sw t1,48(sp)
+  sw t2,52(sp)
+  sw t3,56(sp)
+  lw a0,48(sp)
+  call f_putint
+  lw t2,52(sp)
+  lw t3,56(sp)
+  mv t0,a0
+  sw t0,60(sp)
+  sw t2,52(sp)
+  sw t3,56(sp)
+  lw a0,52(sp)
+  call f_putint
+  lw t3,56(sp)
+  mv t0,a0
+  sw t3,56(sp)
+  lw a0,56(sp)
+  call f_putint
+  mv t0,a0
+  .size f_T2, .-f_T2
+  .text
+  .align 2
+  .global f_T7
+  .type f_T7, @function
+f_T7:
+  add sp,sp,-96
+  sw ra,92(sp)
+  sw s0,0(sp)
+  sw s1,4(sp)
+  sw s2,8(sp)
+  sw s3,12(sp)
+  sw s4,16(sp)
+  sw s5,20(sp)
+  sw s6,24(sp)
+  sw s7,28(sp)
+  sw s8,32(sp)
+  mv t2,a0
+  mv t1,a1
+  li t3,1
+.l0:
+  li s10,1
+  add t4,t1,s10
+  slt t5,t3,t4
+  li s10,0
+  beq t5,s10,.l1
+  li s9,4
+  sw t4,64(sp)
+  mul t4,s9,t3
+  mv s11,t2
+  add s11,s11,t4
+  lw t4,0(s11)
+  sw t5,68(sp)
+  mv t5,t4
+  sw t1,52(sp)
+  sw t2,48(sp)
+  sw t3,56(sp)
+  sw t4,76(sp)
+  sw t5,72(sp)
+  lw a0,72(sp)
+  call f_putint
+  lw t1,52(sp)
+  lw t2,48(sp)
+  lw t3,56(sp)
+  mv t0,a0
+  li s10,1
+  add t3,t3,s10
+  j .l0
+.l1:
+  li a0,1
+  lw s0,0(sp)
+  lw s1,4(sp)
+  lw s2,8(sp)
+  lw s3,12(sp)
+  lw s4,16(sp)
+  lw s5,20(sp)
+  lw s6,24(sp)
+  lw s7,28(sp)
+  lw s8,32(sp)
+  lw ra,92(sp)
+add sp,sp,96
+jr ra
+  .size f_T7, .-f_T7
+  .text
+  .align 2
+  .global f_T16
+  .type f_T16, @function
+f_T16:
+  add sp,sp,-192
+  sw ra,188(sp)
+  sw s0,0(sp)
+  sw s1,4(sp)
+  sw s2,8(sp)
+  sw s3,12(sp)
+  sw s4,16(sp)
+  sw s5,20(sp)
+  sw s6,24(sp)
+  sw s7,28(sp)
+  sw s8,32(sp)
+  mv t2,a0
+  mv t3,a1
+  mv t1,a2
+  mv t4,a3
+  slt t5,t1,t4
+  li s10,0
+  beq t5,s10,.l2
+  li s10,1
+  sw t5,72(sp)
+  add t5,t1,s10
+  mv t6,t4
+.l3:
+  slt a0,t5,t6
+  li s10,0
+  beq a0,s10,.l4
+  li s9,4
+  sw a0,80(sp)
+  mul a0,s9,t5
+  mv s11,t2
+  add s11,s11,a0
+  lw a0,0(s11)
+  li s9,4
+  mul a1,s9,t1
+  mv s11,t2
+  add s11,s11,a1
+  lw a1,0(s11)
+  sgt a2,a0,a1
+  li s10,0
+  beq a2,s10,.l5
+  li s9,4
+  sw a0,84(sp)
+  mul a0,s9,t5
+  mv s11,t2
+  add s11,s11,a0
+  lw a0,0(s11)
+  sw a1,88(sp)
+  mv a1,a0
+  li s9,4
+  sw a0,100(sp)
+  mul a0,s9,t6
+  mv s11,t2
+  add s11,s11,a0
+  lw a0,0(s11)
+  li s9,4
+  sw a2,92(sp)
+  mul a2,s9,t5
+  mv s11,t2
+  add s11,s11,a2
+  sw a0,0(s11)
+  li s9,4
+  sw a0,104(sp)
+  mul a0,s9,t6
+  mv s11,t2
+  add s11,s11,a0
+  sw a1,0(s11)
+  li s10,1
+  sub t6,t6,s10
+  j .l6
+.l5:
+  li s10,1
+  add t5,t5,s10
+.l6:
+  j .l3
+.l4:
+  li s9,4
+  sw a0,112(sp)
+  mul a0,s9,t5
+  mv s11,t2
+  add s11,s11,a0
+  lw a0,0(s11)
+  li s9,4
+  sw a1,96(sp)
+  mul a1,s9,t1
+  mv s11,t2
+  add s11,s11,a1
+  lw a1,0(s11)
+  li s10,1
+  sw a2,108(sp)
+  sub a2,a1,s10
+  sw a1,128(sp)
+  sgt a1,a0,a2
+  li s10,0
+  beq a1,s10,.l7
+  li s10,1
+  sub t5,t5,s10
+.l7:
+  li s9,4
+  sw a0,124(sp)
+  mul a0,s9,t1
+  mv s11,t2
+  add s11,s11,a0
+  lw a0,0(s11)
+  sw a1,136(sp)
+  mv a1,a0
+  li s9,4
+  sw a0,148(sp)
+  mul a0,s9,t5
+  mv s11,t2
+  add s11,s11,a0
+  lw a0,0(s11)
+  li s9,4
+  sw a2,132(sp)
+  mul a2,s9,t1
+  mv s11,t2
+  add s11,s11,a2
+  sw a0,0(s11)
+  li s9,4
+  sw a0,152(sp)
+  mul a0,s9,t5
+  mv s11,t2
+  add s11,s11,a0
+  sw a1,0(s11)
+  sw t1,56(sp)
+  sw t2,48(sp)
+  sw t3,52(sp)
+  sw t4,60(sp)
+  sw t5,64(sp)
+  sw t6,68(sp)
+  sw a0,160(sp)
+  lw a0,48(sp)
+  sw a1,144(sp)
+  lw a1,52(sp)
+  sw a2,156(sp)
+  lw a2,56(sp)
+  lw a3,64(sp)
+  call f_T16
+  lw t2,48(sp)
+  lw t3,52(sp)
+  lw t4,60(sp)
+  lw t6,68(sp)
+  mv t0,a0
+  sw t0,164(sp)
+  sw t2,48(sp)
+  sw t3,52(sp)
+  sw t4,60(sp)
+  sw t6,68(sp)
+  lw a0,48(sp)
+  lw a1,52(sp)
+  lw a2,68(sp)
+  lw a3,60(sp)
+  call f_T16
+  mv t0,a0
+  li a0,1
+  lw s0,0(sp)
+  lw s1,4(sp)
+  lw s2,8(sp)
+  lw s3,12(sp)
+  lw s4,16(sp)
+  lw s5,20(sp)
+  lw s6,24(sp)
+  lw s7,28(sp)
+  lw s8,32(sp)
+  lw ra,188(sp)
+add sp,sp,192
+jr ra
+  j .l8
+.l2:
+  li a0,1
+  lw s0,0(sp)
+  lw s1,4(sp)
+  lw s2,8(sp)
+  lw s3,12(sp)
+  lw s4,16(sp)
+  lw s5,20(sp)
+  lw s6,24(sp)
+  lw s7,28(sp)
+  lw s8,32(sp)
+  lw ra,188(sp)
+add sp,sp,192
+jr ra
+.l8:
+  .size f_T16, .-f_T16
+  .text
+  .align 2
+  .global main
+  .type main, @function
+main:
+  add sp,sp,-432
+  sw ra,428(sp)
+  sw s0,0(sp)
+  sw s1,4(sp)
+  sw s2,8(sp)
+  sw s3,12(sp)
+  sw s4,16(sp)
+  sw s5,20(sp)
+  sw s6,24(sp)
+  sw s7,28(sp)
+  sw s8,32(sp)
+  call f_getint
+  mv t2,a0
+  li t3,1
+.l9:
+  li s10,1
+  add t4,t2,s10
+  slt t5,t3,t4
+  li s10,0
+  beq t5,s10,.l10
+  sw t2,48(sp)
+  sw t3,376(sp)
+  sw t4,380(sp)
+  sw t5,384(sp)
+  call f_getint
+  lw t2,48(sp)
+  lw t3,376(sp)
+  mv t4,a0
+  li s9,4
+  mul t5,s9,t3
+  add s11,sp,52
+  add s11,s11,t5
+  sw t4,0(s11)
+  li s10,1
+  add t3,t3,s10
+  j .l9
+.l10:
+  sw t2,48(sp)
+  sw t3,376(sp)
+  sw t4,388(sp)
+  sw t5,392(sp)
+  add a0,sp,52
+  lw a1,48(sp)
+  call f_T7
+  lw t2,48(sp)
+  mv t0,a0
+  li t3,1
+  mv t4,t2
+  sw t0,400(sp)
+  sw t2,48(sp)
+  sw t3,408(sp)
+  sw t4,412(sp)
+  add a0,sp,52
+  lw a1,48(sp)
+  lw a2,408(sp)
+  lw a3,412(sp)
+  call f_T16
+  lw t2,48(sp)
+  mv t0,a0
+  sw t2,48(sp)
+  add a0,sp,52
+  lw a1,48(sp)
+  call f_T7
+  mv t0,a0
+  li a0,0
+  lw s0,0(sp)
+  lw s1,4(sp)
+  lw s2,8(sp)
+  lw s3,12(sp)
+  lw s4,16(sp)
+  lw s5,20(sp)
+  lw s6,24(sp)
+  lw s7,28(sp)
+  lw s8,32(sp)
+  lw ra,428(sp)
+add sp,sp,432
+jr ra
+  .size main, .-main

@@ -1,0 +1,6 @@
+#!/bin/bash
+make;
+minic2eeyore/minic2eeyore < $1 > tmp.e
+eeyore2tigger/eeyore2tigger < tmp.e > tmp.t
+tigger2riscv/tigger2riscv < tmp.t > $2
+rm tmp.e tmp.t

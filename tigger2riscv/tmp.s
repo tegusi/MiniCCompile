@@ -1,0 +1,689 @@
+.comm v0,70401056,4
+.comm v1,3200048,4
+.comm v2,3200048,4
+  .global v3
+  .section .sdata
+  .align 2
+  .type v3, @object
+  .size v3, 4
+v3:
+  .word 0
+.comm v4,3200048,4
+  .global v5
+  .section .sdata
+  .align 2
+  .type v5, @object
+  .size v5, 4
+v5:
+  .word 0
+  .text
+  .align 2
+  .global f_T6
+  .type @function
+f_T6:
+  add sp,sp,-112
+  sw ra,108(sp)
+  sw s0,0(sp)
+  sw s1,4(sp)
+  sw s2,8(sp)
+  sw s3,12(sp)
+  sw s4,16(sp)
+  sw s5,20(sp)
+  sw s6,24(sp)
+  sw s7,28(sp)
+  sw s8,32(sp)
+  mv t1,a0
+  mv t2,a1
+  li t3,0
+.l0:
+  li s10,0
+    li s10,0
+  beq t4,s10,.l1
+  li s10,2
+  sw t4,60(sp)
+  rem t4,t1,s10
+  li s9,4
+  mul t5,s9,t3
+  add s11,sp,52
+  add s11,s11,t5
+  sw t4,0(s11)
+  li s10,1
+  add t3,t3,s10
+  li s10,2
+  div t1,t1,s10
+  j .l0
+.l1:
+  sw t1,48(sp)
+  mv t1,t3
+.l2:
+  li s10,40
+  sw t4,64(sp)
+  slt t4,t1,s10
+  li s10,0
+  beq t4,s10,.l3
+  li s9,4
+  sw t4,84(sp)
+  mul t4,s9,t1
+  add s11,sp,52
+  add s11,s11,t4
+  li s9,0
+  sw s9,0(s11)
+  li s10,1
+  add t1,t1,s10
+  j .l2
+.l3:
+  mv a0,t3
+  lw s0,0(sp)
+  lw s1,4(sp)
+  lw s2,8(sp)
+  lw s3,12(sp)
+  lw s4,16(sp)
+  lw s5,20(sp)
+  lw s6,24(sp)
+  lw s7,28(sp)
+  lw s8,32(sp)
+  lw ra,108(sp)
+add sp,sp,112
+jr ra
+  .size f_T6, .-f_T6
+  .text
+  .align 2
+  .global f_T17
+  .type @function
+f_T17:
+  add sp,sp,-1408
+  sw ra,1404(sp)
+  sw s0,0(sp)
+  sw s1,4(sp)
+  sw s2,8(sp)
+  sw s3,12(sp)
+  sw s4,16(sp)
+  sw s5,20(sp)
+  sw s6,24(sp)
+  sw s7,28(sp)
+  sw s8,32(sp)
+  mv t1,a0
+  mv t2,a1
+  sw t1,48(sp)
+  sw t2,52(sp)
+  lw a0,48(sp)
+  call f_T6
+  lw t2,52(sp)
+  mv t0,a0
+  sw t0,1336(sp)
+  sw t2,52(sp)
+  lw a0,52(sp)
+  call f_T6
+  mv t0,a0
+  li s9,40
+  li s10,1
+  sub t1,s9,s10
+  li t2,0
+.l4:
+  li s9,1
+    li s10,0
+  beq s2,s10,.l5
+  li s9,4
+  sw s2,1360(sp)
+  mul s2,s9,t1
+  add s11,sp,56
+  add s11,s11,s2
+  lw s2,0(s11)
+  li s9,4
+  mul s3,s9,t1
+  add s11,sp,696
+  add s11,s11,s3
+  lw s3,0(s11)
+  add s4,s2,s3
+  li s10,1
+  sw s2,1364(sp)
+  xor s2,,s4snez s2,s2  li s10,0
+  beq s2,s10,.l6
+  li s10,2
+  sw s2,1376(sp)
+  mul s2,t2,s10
+  li s10,1
+  add t2,s2,s10
+  j .l7
+.l6:
+  li s10,2
+  mul t2,t2,s10
+.l7:
+  li s10,1
+  sub t1,t1,s10
+  j .l4
+.l5:
+  mv a0,t2
+  lw s0,0(sp)
+  lw s1,4(sp)
+  lw s2,8(sp)
+  lw s3,12(sp)
+  lw s4,16(sp)
+  lw s5,20(sp)
+  lw s6,24(sp)
+  lw s7,28(sp)
+  lw s8,32(sp)
+  lw ra,1404(sp)
+add sp,sp,1408
+jr ra
+  .size f_T17, .-f_T17
+  .text
+  .align 2
+  .global f_T35
+  .type @function
+f_T35:
+  add sp,sp,-112
+  sw ra,108(sp)
+  sw s0,0(sp)
+  sw s1,4(sp)
+  sw s2,8(sp)
+  sw s3,12(sp)
+  sw s4,16(sp)
+  sw s5,20(sp)
+  sw s6,24(sp)
+  sw s7,28(sp)
+  sw s8,32(sp)
+  mv t6,a0
+  li t5,1
+.l8:
+  li s10,22
+  slt t1,t5,s10
+  li s10,0
+  beq t1,s10,.l9
+  li s10,22
+  sw t1,56(sp)
+  mul t1,t6,s10
+  add t2,t1,t5
+  li s10,22
+  mul t3,t6,s10
+  add t4,t3,t5
+  li s10,1
+  sw t3,68(sp)
+  sub t3,t4,s10
+  li s9,4
+  sw t4,72(sp)
+  mul t4,s9,t3
+  lui s11,%hi(v0)
+add s11,s11,%lo(v0)
+  add s11,s11,t4
+  lw t4,0(s11)
+  li s10,22
+  sw t3,76(sp)
+  mul t3,t4,s10
+  sw t4,80(sp)
+  add t4,t3,t5
+  li s10,1
+  sw t3,84(sp)
+  sub t3,t4,s10
+  li s9,4
+  sw t4,88(sp)
+  mul t4,s9,t3
+  lui s11,%hi(v0)
+add s11,s11,%lo(v0)
+  add s11,s11,t4
+  lw t4,0(s11)
+  li s9,4
+  sw t3,92(sp)
+  mul t3,s9,t2
+  lui s11,%hi(v0)
+add s11,s11,%lo(v0)
+  add s11,s11,t3
+  sw t4,0(s11)
+  li s10,1
+  add t5,t5,s10
+  j .l8
+.l9:
+  li a0,0
+  lw s0,0(sp)
+  lw s1,4(sp)
+  lw s2,8(sp)
+  lw s3,12(sp)
+  lw s4,16(sp)
+  lw s5,20(sp)
+  lw s6,24(sp)
+  lw s7,28(sp)
+  lw s8,32(sp)
+  lw ra,108(sp)
+add sp,sp,112
+jr ra
+  .size f_T35, .-f_T35
+  .text
+  .align 2
+  .global f_T50
+  .type @function
+f_T50:
+  add sp,sp,-112
+  sw ra,108(sp)
+  sw s0,0(sp)
+  sw s1,4(sp)
+  sw s2,8(sp)
+  sw s3,12(sp)
+  sw s4,16(sp)
+  sw s5,20(sp)
+  sw s6,24(sp)
+  sw s7,28(sp)
+  sw s8,32(sp)
+  mv t1,a0
+  mv a0,a1
+  li a1,21
+  li a3,2097152
+.l10:
+  li s10,0
+  beq a0,s10,.l11
+.l12:
+  sw t1,48(sp)
+  sgt t1,a3,a0
+  sw t1,64(sp)
+  lw t1,48(sp)
+  sw t1,48(sp)
+  lw t1,64(sp)
+  li s10,0
+  beq t1,s10,.l13
+  sw t1,64(sp)
+  lw t1,48(sp)
+  li s10,1
+  sub a1,a1,s10
+  li s10,2
+  div a3,a3,s10
+  j .l12
+.l13:
+  sub a0,a0,a3
+  li s10,22
+  mul t2,t1,s10
+  add t3,t2,a1
+  li s9,4
+  mul a2,s9,t3
+  lui s11,%hi(v0)
+add s11,s11,%lo(v0)
+  add s11,s11,a2
+  lw a2,0(s11)
+  mv t1,a2
+  j .l10
+.l11:
+  li s9,4
+  sw t2,80(sp)
+  mul t2,s9,t1
+  lui s11,%hi(v1)
+add s11,s11,%lo(v1)
+  add s11,s11,t2
+  lw t2,0(s11)
+  mv a0,t2
+  lw s0,0(sp)
+  lw s1,4(sp)
+  lw s2,8(sp)
+  lw s3,12(sp)
+  lw s4,16(sp)
+  lw s5,20(sp)
+  lw s6,24(sp)
+  lw s7,28(sp)
+  lw s8,32(sp)
+  lw ra,108(sp)
+add sp,sp,112
+jr ra
+  .size f_T50, .-f_T50
+  .text
+  .align 2
+  .global f_main
+  .type @function
+f_main:
+  add sp,sp,-240
+  sw ra,236(sp)
+  sw s0,0(sp)
+  sw s1,4(sp)
+  sw s2,8(sp)
+  sw s3,12(sp)
+  sw s4,16(sp)
+  sw s5,20(sp)
+  sw s6,24(sp)
+  sw s7,28(sp)
+  sw s8,32(sp)
+  call f_getint
+  mv t1,a0
+  mv a4,t1
+.l14:
+  li s10,0
+  sw t1,52(sp)
+    li s10,0
+  beq t1,s10,.l15
+  li s10,1
+  sub a4,a4,s10
+  sw t1,56(sp)
+  call f_getint
+  mv t1,a0
+  mv t2,t1
+  sw t1,64(sp)
+  li t1,0
+  li t3,1
+  li t4,1
+  li t5,1
+.l16:
+  li s10,1
+  add t6,t2,s10
+  slt a0,t5,t6
+  li s10,0
+  beq a0,s10,.l17
+  sw t1,68(sp)
+  lui s11,%hi(v3)
+add s11,s11,%lo(v3)
+  sw t2,0(s11)
+  lui s11,%hi(v5)
+add s11,s11,%lo(v5)
+  sw t3,0(s11)
+  sw t4,72(sp)
+  sw t5,76(sp)
+  sw t6,80(sp)
+  call f_getint
+  lw t1,68(sp)
+  lui t2,%hi(v3)
+lw t2,%lo(v3)(t2)
+  lui t3,%hi(v5)
+lw t3,%lo(v5)(t3)
+  lw t4,72(sp)
+  lw t5,76(sp)
+  mv t6,a0
+  sw a0,84(sp)
+  mv a0,t6
+  sw t1,68(sp)
+  lui s11,%hi(v3)
+add s11,s11,%lo(v3)
+  sw t2,0(s11)
+  lui s11,%hi(v5)
+add s11,s11,%lo(v5)
+  sw t3,0(s11)
+  sw t4,72(sp)
+  sw t5,76(sp)
+  sw t6,96(sp)
+  call f_getint
+  lw t1,68(sp)
+  lui t2,%hi(v3)
+lw t2,%lo(v3)(t2)
+  lui t3,%hi(v5)
+lw t3,%lo(v5)(t3)
+  lw t4,72(sp)
+  lw t5,76(sp)
+  mv t6,a0
+  mv a1,t6
+  sw t1,68(sp)
+  lui s11,%hi(v3)
+add s11,s11,%lo(v3)
+  sw t2,0(s11)
+  lui s11,%hi(v5)
+add s11,s11,%lo(v5)
+  sw t3,0(s11)
+  sw t4,72(sp)
+  sw t5,76(sp)
+  sw t6,100(sp)
+  sw a0,88(sp)
+  lw a0,88(sp)
+  sw a1,92(sp)
+  lw a1,68(sp)
+  call f_T17
+  lw t1,68(sp)
+  lui t2,%hi(v3)
+lw t2,%lo(v3)(t2)
+  lui t3,%hi(v5)
+lw t3,%lo(v5)(t3)
+  lw t4,72(sp)
+  lw t5,76(sp)
+  mv t6,a0
+  lw a0,88(sp)
+  mv a0,t6
+  sw t1,68(sp)
+  lui s11,%hi(v3)
+add s11,s11,%lo(v3)
+  sw t2,0(s11)
+  lui s11,%hi(v5)
+add s11,s11,%lo(v5)
+  sw t3,0(s11)
+  sw t4,72(sp)
+  sw t5,76(sp)
+  sw t6,104(sp)
+  sw a0,88(sp)
+  lw a0,92(sp)
+  lw a1,68(sp)
+  call f_T17
+  lw t1,68(sp)
+  lui t2,%hi(v3)
+lw t2,%lo(v3)(t2)
+  lui t3,%hi(v5)
+lw t3,%lo(v5)(t3)
+  lw t4,72(sp)
+  lw t5,76(sp)
+  mv t6,a0
+  lw a1,92(sp)
+  mv a1,t6
+  lw a0,88(sp)
+  li s10,1
+  sw t6,108(sp)
+  xor t6,,a0snez t6,t6  li s10,0
+  beq t6,s10,.l18
+  li s9,4
+  sw t6,112(sp)
+  mul t6,s9,t4
+  lui s11,%hi(v4)
+add s11,s11,%lo(v4)
+  add s11,s11,t6
+  sw t3,0(s11)
+  li s9,4
+  sw t6,116(sp)
+  mul t6,s9,t3
+  lui s11,%hi(v1)
+add s11,s11,%lo(v1)
+  add s11,s11,t6
+  sw a1,0(s11)
+  li s10,22
+  sw t6,120(sp)
+  mul t6,t3,s10
+  li s10,1
+  sub a2,t4,s10
+  li s9,4
+  mul a3,s9,a2
+  lui s11,%hi(v4)
+add s11,s11,%lo(v4)
+  add s11,s11,a3
+  lw a3,0(s11)
+  li s9,4
+  sw a2,128(sp)
+  mul a2,s9,t6
+  lui s11,%hi(v0)
+add s11,s11,%lo(v0)
+  add s11,s11,a2
+  sw a3,0(s11)
+  li s10,1
+  sw t6,124(sp)
+  sub t6,t4,s10
+  li s9,4
+  sw a2,136(sp)
+  mul a2,s9,t6
+  lui s11,%hi(v4)
+add s11,s11,%lo(v4)
+  add s11,s11,a2
+  lw a2,0(s11)
+  li s9,4
+  sw t6,140(sp)
+  mul t6,s9,a2
+  lui s11,%hi(v2)
+add s11,s11,%lo(v2)
+  add s11,s11,t6
+  lw t6,0(s11)
+  li s10,1
+  sw a2,144(sp)
+  add a2,t6,s10
+  li s9,4
+  sw t6,148(sp)
+  mul t6,s9,t3
+  lui s11,%hi(v2)
+add s11,s11,%lo(v2)
+  add s11,s11,t6
+  sw a2,0(s11)
+  sw t1,68(sp)
+  lui s11,%hi(v3)
+add s11,s11,%lo(v3)
+  sw t2,0(s11)
+  lui s11,%hi(v5)
+add s11,s11,%lo(v5)
+  sw t3,0(s11)
+  sw t4,72(sp)
+  sw t5,76(sp)
+  sw t6,156(sp)
+  sw a0,88(sp)
+  lui a0,%hi(v5)
+lw a0,%lo(v5)(a0)
+  call f_T35
+  lw t1,68(sp)
+  lui t2,%hi(v3)
+lw t2,%lo(v3)(t2)
+  lui t3,%hi(v5)
+lw t3,%lo(v5)(t3)
+  lw t4,72(sp)
+  lw t5,76(sp)
+  mv t0,a0
+  li s10,1
+  add t3,t3,s10
+  li s10,1
+  add t4,t4,s10
+  j .l19
+.l18:
+  lw a0,88(sp)
+  li s10,2
+  sw a2,152(sp)
+  xor a2,,a0snez a2,a2  li s10,0
+  beq a2,s10,.l20
+  li s10,1
+  sw a2,172(sp)
+  sub a2,t4,s10
+  sw a3,132(sp)
+  sub a3,a2,a1
+  li s9,4
+  sw a2,176(sp)
+  mul a2,s9,a3
+  lui s11,%hi(v4)
+add s11,s11,%lo(v4)
+  add s11,s11,a2
+  lw a2,0(s11)
+  li s9,4
+  sw a3,180(sp)
+  mul a3,s9,t4
+  lui s11,%hi(v4)
+add s11,s11,%lo(v4)
+  add s11,s11,a3
+  sw a2,0(s11)
+  li s10,1
+  add t4,t4,s10
+  j .l21
+.l20:
+  li s10,1
+  sw a2,184(sp)
+  sub a2,t4,s10
+  li s9,4
+  sw a3,188(sp)
+  mul a3,s9,a2
+  lui s11,%hi(v4)
+add s11,s11,%lo(v4)
+  add s11,s11,a3
+  lw a3,0(s11)
+  li s10,1
+  sw a2,196(sp)
+  sub a2,t4,s10
+  li s9,4
+  sw a3,200(sp)
+  mul a3,s9,a2
+  lui s11,%hi(v4)
+add s11,s11,%lo(v4)
+  add s11,s11,a3
+  lw a3,0(s11)
+  li s9,4
+  mul t6,s9,a3
+  lui s11,%hi(v2)
+add s11,s11,%lo(v2)
+  add s11,s11,t6
+  lw t6,0(s11)
+  sw a2,204(sp)
+  sub a2,t6,a1
+  sw t0,160(sp)
+  sw t1,68(sp)
+  lui s11,%hi(v3)
+add s11,s11,%lo(v3)
+  sw t2,0(s11)
+  lui s11,%hi(v5)
+add s11,s11,%lo(v5)
+  sw t3,0(s11)
+  sw t4,72(sp)
+  sw t5,76(sp)
+  sw t6,212(sp)
+  sw a0,88(sp)
+  lw a0,200(sp)
+  sw a1,92(sp)
+  mv a1,a2
+  call f_T50
+  lw t1,68(sp)
+  lui t2,%hi(v3)
+lw t2,%lo(v3)(t2)
+  lui t3,%hi(v5)
+lw t3,%lo(v5)(t3)
+  lw t4,72(sp)
+  lw t5,76(sp)
+  mv t6,a0
+  mv t1,t6
+  sw t1,68(sp)
+  lui s11,%hi(v3)
+add s11,s11,%lo(v3)
+  sw t2,0(s11)
+  lui s11,%hi(v5)
+add s11,s11,%lo(v5)
+  sw t3,0(s11)
+  sw t4,72(sp)
+  sw t5,76(sp)
+  sw t6,220(sp)
+  lw a0,68(sp)
+  call f_putint
+  lw t1,68(sp)
+  lui t2,%hi(v3)
+lw t2,%lo(v3)(t2)
+  lui t3,%hi(v5)
+lw t3,%lo(v5)(t3)
+  lw t4,72(sp)
+  lw t5,76(sp)
+  mv t0,a0
+  sw t0,224(sp)
+  sw t1,68(sp)
+  lui s11,%hi(v3)
+add s11,s11,%lo(v3)
+  sw t2,0(s11)
+  lui s11,%hi(v5)
+add s11,s11,%lo(v5)
+  sw t3,0(s11)
+  sw t4,72(sp)
+  sw t5,76(sp)
+  li a0,10
+  call f_putchar
+  lw t1,68(sp)
+  lui t2,%hi(v3)
+lw t2,%lo(v3)(t2)
+  lui t3,%hi(v5)
+lw t3,%lo(v5)(t3)
+  lw t4,72(sp)
+  lw t5,76(sp)
+  mv t0,a0
+.l21:
+.l19:
+  li s10,1
+  add t5,t5,s10
+  j .l16
+.l17:
+  j .l14
+.l15:
+  li a0,0
+  lw s0,0(sp)
+  lw s1,4(sp)
+  lw s2,8(sp)
+  lw s3,12(sp)
+  lw s4,16(sp)
+  lw s5,20(sp)
+  lw s6,24(sp)
+  lw s7,28(sp)
+  lw s8,32(sp)
+  lw ra,236(sp)
+add sp,sp,240
+jr ra
+  .size f_main, .-f_main

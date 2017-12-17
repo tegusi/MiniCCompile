@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+riscv32-unknown-linux-gnu-gcc -S putint.c -static -o putint.s
+riscv32-unknown-linux-gnu-gcc -S getint.c -static -o getint.s
+riscv32-unknown-linux-gnu-gcc putint.s getint.s $1 -o prog
+qemu-riscv32 -L /opt/riscv/sysroot/ prog

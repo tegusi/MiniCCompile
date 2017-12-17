@@ -1,7 +1,0 @@
-#!/bin/bash
-make;
-cd e2t;
-make;
-cd ..;
-./a.out < $1 > tmp.ee;
-e2t/a.out < tmp.ee > $2;
