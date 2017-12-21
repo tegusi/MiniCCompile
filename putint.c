@@ -1,4 +1,4 @@
 #include <stdio.h>
-int f_putint(int x) {
+int putint(int x) {
   printf("%d", x);
 }

@@ -19,7 +19,8 @@ int g(int x) /* 该函数以数组和循环语句计算Fibonacci 数*/
 {
 int a[40]; /* int 数组声明
 注意！base 中数组大小必须是常数，不可写成int a[x]; 或int a[10+30]; 这样*/
-a[0] = a[1] = 1;
+    a[0] = 1;
+    a[1] = 1;
 int i;
 i = 2; /* 注意！base 语法集不包括初始化赋值语句int i = 2; */
 while (i < x + 1) /* while 循环是base 语法集唯一的循环语句*/

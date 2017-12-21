@@ -7,4 +7,4 @@ lex.yy.c: eeyore.l
 y.tab.c y.tab.h: eeyore.y
 	bison -y -d eeyore.y
 clean:
-	-rm eeyore2tigger y.tab.c y.tab.h lex.yy.c eeyore2tigger
+	-rm eeyore2tigger y.tab.c y.tab.h lex.yy.c

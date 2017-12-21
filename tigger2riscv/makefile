@@ -7,4 +7,4 @@ lex.yy.c: tigger.l
 y.tab.c y.tab.h: tigger.y
 	bison -y -d tigger.y
 clean:
-	-rm tigger2riscv y.tab.c y.tab.h lex.yy.c tigger2riscv
+	-rm tigger2riscv y.tab.c y.tab.h lex.yy.c

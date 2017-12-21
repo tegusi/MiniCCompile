@@ -1,0 +1,3 @@
+#!/bin/bash
+make
+./minic2riscv $1 a.s

@@ -93,10 +93,16 @@ Expression:
       printf("snez %s,%s\n", $1.c_str(), $1.c_str());
       break;
     }
-    else if($4 == "==")
+    else if($4 == "!=")
     {
       printf("xor %s,%s,%s\n", $1.c_str(), $3.c_str(), $5.c_str());
       printf("snez %s,%s\n", $1.c_str(), $1.c_str());
+      break;
+    }
+    else if($4 == "==")
+    {
+      printf("xor %s,%s,%s\n", $1.c_str(), $3.c_str(), $5.c_str());
+      printf("seqz %s,%s\n", $1.c_str(), $1.c_str());
       break;
     }
   }
@@ -108,6 +114,15 @@ Expression:
       printf("slti %s,%s,%s\n",$1.c_str(),$2.c_str(),$3.c_str());
   }
   | Register '=' op Register
+  {printf("  ");
+    if($3 == "-")
+      printf("sub %s,zero,%s\n",$1.c_str(),$4.c_str());
+    if($3 == "!")
+    {
+      printf("seqz %s,%s\n", $1.c_str(), $4.c_str());
+      printf("and %s,%s,0xff\n", $1.c_str(), $1.c_str());
+    }
+  }
   | Register '=' Integer
   {printf("  ");
     cout<<"li "<<$1<<","<<$3<<endl;
@@ -149,6 +164,15 @@ Expression:
   }
   | CALL Function
   {printf("  ");
+
+  if($2 == "f_putint")
+    $2 = "putint";
+  if($2 == "f_getint")
+    $2 = "getint";
+    if($2 == "f_putchar")
+      $2 = "putchar";
+    if($2 == "f_getchar")
+      $2 = "getchar";
     cout<<"call "<<$2<<endl;
   }
   | Label ':'

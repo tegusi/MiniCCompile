@@ -29,7 +29,7 @@ f_T2:
   sw t2,52(sp)
   sw t3,56(sp)
   lw a0,48(sp)
-  call f_putint
+  call putint
   lw t2,52(sp)
   lw t3,56(sp)
   mv t0,a0
@@ -37,12 +37,12 @@ f_T2:
   sw t2,52(sp)
   sw t3,56(sp)
   lw a0,52(sp)
-  call f_putint
+  call putint
   lw t3,56(sp)
   mv t0,a0
   sw t3,56(sp)
   lw a0,56(sp)
-  call f_putint
+  call putint
   mv t0,a0
   .size f_T2, .-f_T2
   .text
@@ -84,7 +84,7 @@ f_T7:
   sw t4,76(sp)
   sw t5,72(sp)
   lw a0,72(sp)
-  call f_putint
+  call putint
   lw t1,52(sp)
   lw t2,48(sp)
   lw t3,56(sp)
@@ -311,7 +311,7 @@ main:
   sw s6,24(sp)
   sw s7,28(sp)
   sw s8,32(sp)
-  call f_getint
+  call getint
   mv t2,a0
   li t3,1
 .l9:
@@ -324,7 +324,7 @@ main:
   sw t3,376(sp)
   sw t4,380(sp)
   sw t5,384(sp)
-  call f_getint
+  call getint
   lw t2,48(sp)
   lw t3,376(sp)
   mv t4,a0
