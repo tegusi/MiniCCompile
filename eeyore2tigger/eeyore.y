@@ -77,13 +77,30 @@ Expression:
   {
     block tmp = block(iOP1,$1,$3,$4,$5);
     int id = synTable[$1];tmp.def[id] = 1;
-    if(!isdigit($3))
+    if(isdigit($3) && isdigit($5))//常数计算
     {
-      int id = synTable[$3];tmp.use[id] = 1;
+      int res;
+      tmp.type = iASS;
+      if($4 == "+")
+        res = stoi($3) + stoi($5);
+      if($4 == "-")
+        res = stoi($3) - stoi($5);
+      if($4 == "*")
+        res = stoi($3) * stoi($5);
+      if($4 == "/")
+        res = stoi($3) / stoi($5);
+      tmp.arg2 = to_string(res);
     }
-    if(!isdigit($5))
+    else
     {
-      int id = synTable[$5];tmp.use[id] = 1;
+      if(!isdigit($3))
+      {
+        int id = synTable[$3];tmp.use[id] = 1;
+      }
+      if(!isdigit($5))
+      {
+        int id = synTable[$5];tmp.use[id] = 1;
+      }
     }
     blocks.push_back(tmp);
   }

@@ -56,7 +56,7 @@ using namespace std;
 typedef int TokenType;
 #define MAXTOKENLEN 40
 #define MAXVARS 500
-#define MAXREGS 24
+#define MAXREGS 23
 
 extern int glbID_cnt;
 struct block{
@@ -77,7 +77,7 @@ struct variable{
   variable(string _name,int _id,int memID = 0):id(_id),name(_name)
   {
     mem = memID;isArray = 0;
-    st = 63333;ed = -1;_pos = 0;
+    st = 63333;ed = -1;_pos = 0;_reg = 0;
     if(mem == 0) {isGlobal = 1;glbID = glbID_cnt++;}
     else isGlobal = 0;
   };
@@ -123,6 +123,7 @@ extern FILE* listing; /* listing output text file */
 extern FILE* code; /* code text file for TM simulator */
 
 extern int yylineno; /* source line number for listing */
+extern int glb_cnt;
 extern std::vector<block> blocks;
 extern map<string,int> synTable;
 extern map<string,int> lblTable;

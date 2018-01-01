@@ -128,7 +128,7 @@ Statement:
     assign(varId,"4 * " + $3);
     cout<<$1+"["+varId+"] = "+$6<<endl;
   }
-  | VarDefn {}
+  | VarDefn
   | RETURN Expression ';'
   { cout<<"return "<<$2<<endl; }
   ;

@@ -13,7 +13,6 @@
  * store current number of spaces to indent
  */
 static int indentno = 0;
-extern int glb_cnt;
 
 //t0-t6:0-6
 //s0-s11:7-18
@@ -63,17 +62,6 @@ void liveAnalysis()
     q.push(i);
     if(i-1>=0) blocks[i].pre.push_back(i-1);
   }
-  // for(int i = 0;i < blocks.size();i++)
-  // {
-  //   // cout<<i<<" ";
-  //   // cout<<blocks[i].use<<" "<<blocks[i].def<<endl;
-  //   for(auto t = blocks[i].pre.begin();t != blocks[i].pre.end();t++)
-  //   {
-  //     cout<<*t<<" ";
-  //   }
-  //   cout<<endl;
-  // }
-  // label可能会有多个pre
   while(!q.empty())
   {
     int t = q.front();q.pop();
@@ -83,7 +71,6 @@ void liveAnalysis()
     if(line->type == iGOTO)
     {
       line->live |= blocks[lblTable[line->arg1]].live;
-      // line->live = line->use & line->def;
     }
     else if(line->type == iIF)
     {
@@ -98,17 +85,6 @@ void liveAnalysis()
         q.push(*i);
       }
   }
-  // for(int i = 0;i < blocks.size();i++)
-  // {
-  //   cout<<i<<" ";
-  //   cout<<blocks[i].live<<endl;
-  //   // for(auto t = blocks[i].pre.begin();t != blocks[i].pre.end();t++)
-  //   // {
-  //   //   cout<<*t<<" ";
-  //   // }
-  //   cout<<endl;
-  // }
-  // {liveInterval[var].first = 63333;liveInterval[var].second = -1;}
   for(int var = 0;var < glb_cnt;var++)
   {vars[var].st = 63333;vars[var].ed = -1;}
   for(int i = 0;i < blocks.size();i++)
@@ -171,19 +147,9 @@ void spillVar(variable* var)
       maxvar = regInfo[reg].vars;
     }
   }
-  // if(maxed > maxvar->ed)
-  // {
-    assign(maxvar->reg,var);
-    maxvar->pos = MEM;
-    maxvar->active = 0;
-    // maxvar->mem = stackLength++;
-  // }
-  // else
-  // {
-  //   maxvar->pos = MEM;
-  //   maxvar->active = 0;
-  //   // var->mem = stackLength++;
-  // }
+  assign(maxvar->reg,var);
+  maxvar->pos = MEM;
+  maxvar->active = 0;
 }
 void linear_scan() {
   sort(vars,vars+glb_cnt,compare);
@@ -191,20 +157,20 @@ void linear_scan() {
   for(int var = 0;var < glb_cnt;var++)
   {
     if(vars[var].ed == -1) assign(0,&vars[var]);
-    else{
-    expireVars(vars[var].st,var);
-    reg_tmp = getFreeReg();
-    if(reg_tmp != -1) assign(reg_tmp,&vars[var]);
-    else spillVar(&vars[var]);
-    // cout<<"REG_TMP"<<reg_tmp<<endl;
-  }
+    else
+    {
+      expireVars(vars[var].st,var);
+      reg_tmp = getFreeReg();
+      if(reg_tmp != -1) assign(reg_tmp,&vars[var]);
+      else spillVar(&vars[var]);
+    }
   }
 }
 
 void optimize()
 {
   auto ptr = blocks.begin();
-  while(ptr != blocks.end())
+  while(ptr != blocks.end())//原本的窥孔优化
   {
     if((ptr->type == iOP1 || ptr->type == iCALL)
       && (ptr+1)->type == iASS
@@ -214,6 +180,73 @@ void optimize()
       ptr->def = (ptr+1)->def;
     ptr = blocks.erase(ptr+1);}
     else ptr++;
+  }
+  for(int i = 0;i < blocks.size();i++)//复写传播
+  {
+    if(blocks[i].type == iASS)
+    {
+      string lval = blocks[i].arg1;
+      for(int j = i + 1; blocks[j].arg1 != lval && j < blocks.size();j++)
+      {
+        if(blocks[j].type == iASS && blocks[j].arg2 == lval)
+        {
+          blocks[j].arg2 = blocks[i].arg2;
+          blocks[j].use = blocks[i].use;
+        }
+      }
+    }
+  }
+  ptr = blocks.begin();
+  while(ptr != blocks.end())//无用代码消除
+  {
+    if(ptr->type == iGOTO)
+    {
+      ptr++;
+      while(ptr->type != iLABEL)
+      ptr = blocks.erase(ptr);
+    }
+    ptr++;
+  }
+  for(int i = 0;i < blocks.size();i++)//if优化
+  {
+    if(blocks[i].type == iIF && blocks[i-1].type == iOP1 && blocks[i-1].arg3 != "&&" && blocks[i-1].arg3 != "||")
+    {
+      blocks[i].arg1 = blocks[i-1].arg2;
+      blocks[i].arg2 = blocks[i-1].arg3;
+      blocks[i].arg3 = blocks[i-1].arg4;
+      if(blocks[i].arg2 == ">")
+        blocks[i].arg2 = "<=";
+      else if(blocks[i].arg2 == "<")
+        blocks[i].arg2 = ">=";
+      else if(blocks[i].arg2 == "<=")
+        blocks[i].arg2 = ">";
+      else if(blocks[i].arg2 == ">=")
+        blocks[i].arg2 = "<";
+      else if(blocks[i].arg2 == "!=")
+        blocks[i].arg2 = "==";
+      else if(blocks[i].arg2 == "==")
+        blocks[i].arg2 = "!=";
+      blocks[i].use = blocks[i-1].use;
+    }
+  }
+  for(int i = 0;i < blocks.size();i++)
+  {
+    if(blocks[i].type == iLABEL)
+    {
+      lblTable[blocks[i].arg1] = i;
+    }
+  }
+  liveAnalysis();
+  ptr = blocks.begin();
+  while(ptr != blocks.end())
+  {
+    if(synTable.find(ptr->arg1) == synTable.end()) {ptr++;continue;}
+    if(vars[synTable[ptr->arg1]].ed == -1 && ptr->type != iCALL)
+    {
+      ptr = blocks.erase(ptr);
+    }
+    else
+      ptr++;
   }
   for(int i = 0;i < blocks.size();i++)
   {

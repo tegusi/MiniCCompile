@@ -156,7 +156,7 @@ Expression:
     else if($3 == "<=")
       cout<<"ble "<<$2<<","<<$4<<",."<<$6<<endl;
     else if($3 == ">=")
-      cout<<"blt "<<$4<<","<<$2<<",."<<$6<<endl;
+      cout<<"ble "<<$4<<","<<$2<<",."<<$6<<endl;
   }
   | GOTO Label//可以优化
   {printf("  ");

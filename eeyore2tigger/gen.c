@@ -16,10 +16,13 @@ string regName[] = {"t0","t1","t2","t3","t4","t5","t6",//caller saved
                     "a0","a1","a2","a3","a4","a5","a6","a7",//param 7+
                     "s0","s1","s2","s3","s4","s5","s6","s7","s8","s9","s10","s11"};//15+
 int callerSaved[] = {0,1,2,3,4,5,6};
+int regSaved[40];
+int NUMREG4 = 23;
 int NUMREG1 = 24;
 int NUMREG2 = 25;
 int ADDRREG = 26;
 int line;
+myfunction nowfunc;
 void link(int reg,variable *var)
 {
   regInfo[reg]._var = var;
@@ -82,6 +85,8 @@ void LoadVarTemp(int reg,variable* var)//传参并不修改变量描述
 }
 int LoadNum(int reg,string num)
 {
+  if(num == "4")
+    return NUMREG4;
   cout<<regName[reg]<<" = "<<num<<endl;
   return reg;
 }
@@ -103,7 +108,7 @@ void LoadAddr(variable *var)
 }
 void IfStatement(int reg1, string op,int reg2,string label)
 {
-  cout<<"if "<<regName[reg1]<<op<<regName[reg2]<<" goto "<<label<<endl;
+  cout<<"if "<<regName[reg1]<<" "<<op<<" "<<regName[reg2]<<" goto "<<label<<endl;
 }
 void OP1Statement(int reg1, int reg2, string op, int reg3)
 {
@@ -119,6 +124,7 @@ void ASSStatement(string reg1, string reg2)
 }
 void _SpillVar_(int reg,variable *var)
 {
+  if(var->ed < line) {regInfo[reg]._var = NULL;return;}
   if(var->mem)
   {
     RegToMem(reg,regInfo[reg]._var);
@@ -152,9 +158,24 @@ void _RecoverVar_(variable *var)//保证为空
 int _GetReg_(variable *var,variable* &spilled)
 {
   spilled = NULL;
-  if(var->_pos == REG) return var->_reg;
+  if(var->_pos == REG)
+  {
+    if(regSaved[var->_reg] == 0)
+    {
+      regSaved[var->_reg] = 1;
+      cout<<"store "<<regName[var->_reg]<<" "<<var->_reg-15<<endl;
+      regInfo[var->_reg]._var = NULL;
+    }
+    return var->_reg;
+  }
   if(var->_pos == MEM || var->_pos == GLB)
   {
+    if(regSaved[var->_reg] == 0)
+    {
+      regSaved[var->_reg] = 1;
+      cout<<"store "<<regName[var->_reg]<<" "<<var->_reg-15<<endl;
+      regInfo[var->_reg]._var = NULL;
+    }
     if(regInfo[var->reg]._var != NULL)
     {
       spilled = regInfo[var->reg]._var;
@@ -165,6 +186,12 @@ int _GetReg_(variable *var,variable* &spilled)
   }
   if(var->_pos == DEAD)
   {
+    if(regSaved[var->_reg] == 0)
+    {
+      regSaved[var->_reg] = 1;
+      cout<<"store "<<regName[var->_reg]<<" "<<var->_reg-15<<endl;
+      regInfo[var->_reg]._var = NULL;
+    }
     if(regInfo[var->reg]._var != NULL)
     {
       spilled = regInfo[var->reg]._var;
@@ -257,7 +284,6 @@ void gen()
       }
       case iFBEGIN:
       {
-        myfunction nowfunc;
         for(int i = 0;i < 24; i++)
         {regInfo[i]._var = NULL;}
         for(int i = 0;i < functions.size();i++)
@@ -266,15 +292,22 @@ void gen()
           {nowfunc = functions[i];break;}
         }
         cout<<now.arg1<<" "<<"["<<now.arg2<<"] ["<<nowfunc.stackSize<<']'<<endl;
+        for(int reg = 0;reg < 24;reg++)
+        regSaved[reg] = 1;
         for(int reg = 15;reg < 24;reg++)
         {
-          cout<<"store "<<regName[reg]<<" "<<reg-15<<endl;
-          // if(regInfo[reg]._var != NULL)
-          // {
-          //   varOfCalleeToRec.push_back(regInfo[reg]._var);
-          //   _SpillVar_(reg,regInfo[reg]._var);
-          // }
+          if(now.arg1 != "f_main")
+            regSaved[reg] = 0;
+          else
+            regSaved[reg] = 1;
+          // cout<<"store "<<regName[reg]<<" "<<reg-15<<endl;
+          // // if(regInfo[reg]._var != NULL)
+          // // {
+          // //   varOfCalleeToRec.push_back(regInfo[reg]._var);
+          // //   _SpillVar_(reg,regInfo[reg]._var);
+          // // }
         }
+        cout<<regName[NUMREG4]<<" = 4"<<endl;
         for(int para = 0;para < stoi(now.arg2);para++)
         {
           variable *parameter = &vars[synTable["p" + to_string(para) + now.arg1]];
@@ -285,11 +318,6 @@ void gen()
       }
       case iFEND:
       {
-        // for(int reg = 0;reg < varOfCalleeToRec.size();reg++)
-        // {
-        //   _RecoverVar_(varOfCalleeToRec[reg]);
-        // }
-        // varOfCalleeToRec.clear();
         cout<<"end "<<now.arg1<<endl;
         break;
       }
@@ -396,8 +424,10 @@ void gen()
           reg = _GetReg_(var,rec1);
           RegToReg(7,reg);
         }
+        if(nowfunc.name != "f_main")
         for(int reg = 15;reg < 24;reg++)
         {
+          if(regSaved[reg] == 1)
           cout<<"load "<<reg-15<<" "<<regName[reg]<<endl;
         }
         cout<<"return"<<endl;
