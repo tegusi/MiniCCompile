@@ -300,12 +300,6 @@ void gen()
             regSaved[reg] = 0;
           else
             regSaved[reg] = 1;
-          // cout<<"store "<<regName[reg]<<" "<<reg-15<<endl;
-          // // if(regInfo[reg]._var != NULL)
-          // // {
-          // //   varOfCalleeToRec.push_back(regInfo[reg]._var);
-          // //   _SpillVar_(reg,regInfo[reg]._var);
-          // // }
         }
         cout<<regName[NUMREG4]<<" = 4"<<endl;
         for(int para = 0;para < stoi(now.arg2);para++)

@@ -479,12 +479,12 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint16 yyrline[] =
 {
        0,    30,    30,    34,    35,    36,    37,    41,    42,    42,
-      46,    48,    54,    53,    67,    77,    77,    79,    81,    85,
-      86,    87,    91,    95,    95,    97,    96,   105,   111,   104,
-     121,   123,   124,   131,   132,   138,   137,   147,   151,   152,
-     156,   157,   158,   165,   172,   179,   187,   192,   193,   200,
-     207,   217,   218,   225,   235,   236,   243,   250,   257,   267,
-     268,   275,   285,   295,   303,   305,   308,   312
+      46,    48,    54,    53,    68,    79,    79,    81,    84,    88,
+      89,    90,    94,    98,    98,   100,    99,   108,   114,   107,
+     124,   126,   127,   134,   135,   141,   140,   150,   154,   155,
+     159,   160,   161,   168,   175,   187,   195,   200,   201,   208,
+     215,   225,   226,   233,   243,   244,   251,   258,   265,   275,
+     276,   283,   293,   297,   299,   302,   305,   309
 };
 #endif
 
@@ -498,7 +498,7 @@ static const char *const yytname[] =
   "IF", "THEN", "ELSE", "WHILE", "ASSIGN", "INTEGER", "IDENTIFIER", "';'",
   "'['", "']'", "'('", "')'", "'{'", "'}'", "','", "'='", "$accept",
   "Goal", "DefnDeclList", "VarDefn", "$@1", "VarDecl", "FuncDefn", "$@2",
-  "FuncDecl", "ParaList", "$@3", "FuncBody", "Type", "Statement", "$@4",
+  "FuncDecl", "ParaList", "@3", "FuncBody", "Type", "Statement", "$@4",
   "$@5", "$@6", "$@7", "StatementElse", "$@8", "StatementLine",
   "p1Expression", "p2Expression", "p3Expression", "p4Expression",
   "p5Expression", "Expression", "IdenList", "Integer", "Identifier", YY_NULLPTR
@@ -1369,190 +1369,203 @@ yyreduce:
       cout<<"f_"<<(yyvsp[-3])<<" [0]"<<endl;
     else
       cout<<"f_"<<(yyvsp[-3])<<" ["<<nowEnv->symTable.size()<<"]"<<endl;
+    nowEnv->pre->funcPara[(yyvsp[-3])] = (yyvsp[-1]);
     isDecl = 0;
   }
-#line 1375 "y.tab.c" /* yacc.c:1661  */
+#line 1376 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 13:
-#line 63 "minic.y" /* yacc.c:1661  */
+#line 64 "minic.y" /* yacc.c:1661  */
     {cout<<"end f_"<<(yyvsp[-7])<<endl;nowEnv=nowEnv->pre;}
-#line 1381 "y.tab.c" /* yacc.c:1661  */
+#line 1382 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 14:
-#line 68 "minic.y" /* yacc.c:1661  */
+#line 69 "minic.y" /* yacc.c:1661  */
     {
     // nowEnv->symTable.insert(maps($2,getNewOriVar(nowEnv, glb_id)));
     nowEnv = nowEnv->pre;
+    nowEnv->funcPara[(yyvsp[-4])] = (yyvsp[-2]);
     isDecl = 0;
     isParam = 0;
   }
-#line 1392 "y.tab.c" /* yacc.c:1661  */
+#line 1394 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 15:
-#line 77 "minic.y" /* yacc.c:1661  */
-    {nowEnv = newEnv(nowEnv);isParam = 1;}
-#line 1398 "y.tab.c" /* yacc.c:1661  */
+#line 79 "minic.y" /* yacc.c:1661  */
+    {nowEnv = newEnv(nowEnv);isParam = 1;(yyval) = "1";}
+#line 1400 "y.tab.c" /* yacc.c:1661  */
+    break;
+
+  case 17:
+#line 82 "minic.y" /* yacc.c:1661  */
+    {(yyval) = to_string(stoi((yyvsp[-2])) + 1);}
+#line 1406 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 18:
-#line 81 "minic.y" /* yacc.c:1661  */
-    { nowEnv = newEnv(nowEnv);isParam = 1;}
-#line 1404 "y.tab.c" /* yacc.c:1661  */
+#line 84 "minic.y" /* yacc.c:1661  */
+    { nowEnv = newEnv(nowEnv);isParam = 1;(yyval) = "0";}
+#line 1412 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 22:
-#line 91 "minic.y" /* yacc.c:1661  */
+#line 94 "minic.y" /* yacc.c:1661  */
     {isDecl = 1;}
-#line 1410 "y.tab.c" /* yacc.c:1661  */
+#line 1418 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 23:
-#line 95 "minic.y" /* yacc.c:1661  */
+#line 98 "minic.y" /* yacc.c:1661  */
     {nowEnv = newEnv(nowEnv);}
-#line 1416 "y.tab.c" /* yacc.c:1661  */
+#line 1424 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 24:
-#line 95 "minic.y" /* yacc.c:1661  */
+#line 98 "minic.y" /* yacc.c:1661  */
     {nowEnv = nowEnv->pre;}
-#line 1422 "y.tab.c" /* yacc.c:1661  */
+#line 1430 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 25:
-#line 97 "minic.y" /* yacc.c:1661  */
+#line 100 "minic.y" /* yacc.c:1661  */
     {
     string L1 = to_string(glb_lbl_id++);
     cout<<"if "<<(yyvsp[-1])<<" == 0 goto l"<<L1<<endl;
     (yyvsp[-1]) = L1;
   }
-#line 1432 "y.tab.c" /* yacc.c:1661  */
+#line 1440 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 27:
-#line 105 "minic.y" /* yacc.c:1661  */
+#line 108 "minic.y" /* yacc.c:1661  */
     {
     string L1 = to_string(glb_lbl_id++);
     cout<<"l"<<L1<<":"<<endl;
     (yyvsp[0]) = L1;
   }
-#line 1442 "y.tab.c" /* yacc.c:1661  */
+#line 1450 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 28:
-#line 111 "minic.y" /* yacc.c:1661  */
+#line 114 "minic.y" /* yacc.c:1661  */
     {
     string L2 = to_string(glb_lbl_id++);
     cout<<"if "<<(yyvsp[-1])<<" == 0 goto l"<<L2<<endl;
     (yyvsp[-1]) = L2;
   }
-#line 1452 "y.tab.c" /* yacc.c:1661  */
+#line 1460 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 29:
-#line 117 "minic.y" /* yacc.c:1661  */
+#line 120 "minic.y" /* yacc.c:1661  */
     {
     cout<<"goto l"<<(yyvsp[-6])<<endl;
     cout<<"l"<<(yyvsp[-3])<<":"<<endl;
   }
-#line 1461 "y.tab.c" /* yacc.c:1661  */
+#line 1469 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 30:
-#line 122 "minic.y" /* yacc.c:1661  */
+#line 125 "minic.y" /* yacc.c:1661  */
     { assign((yyvsp[-3]),(yyvsp[-1])); }
-#line 1467 "y.tab.c" /* yacc.c:1661  */
+#line 1475 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 32:
-#line 125 "minic.y" /* yacc.c:1661  */
+#line 128 "minic.y" /* yacc.c:1661  */
     {
     string varId = getNewTmpVar(nowEnv, glb_id);
     cout<<"var "<<varId<<endl;
     assign(varId,"4 * " + (yyvsp[-4]));
     cout<<(yyvsp[-6])+"["+varId+"] = "+(yyvsp[-1])<<endl;
   }
-#line 1478 "y.tab.c" /* yacc.c:1661  */
+#line 1486 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 34:
-#line 133 "minic.y" /* yacc.c:1661  */
+#line 136 "minic.y" /* yacc.c:1661  */
     { cout<<"return "<<(yyvsp[-1])<<endl; }
-#line 1484 "y.tab.c" /* yacc.c:1661  */
+#line 1492 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 35:
-#line 138 "minic.y" /* yacc.c:1661  */
+#line 141 "minic.y" /* yacc.c:1661  */
     {
     string L2 = to_string(glb_lbl_id++);
     cout<<"goto l"<<L2<<endl;
     cout<<"l"<<(yyvsp[(-3) - (1)])<<":"<<endl;
     (yyvsp[0]) = L2;
   }
-#line 1495 "y.tab.c" /* yacc.c:1661  */
+#line 1503 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 36:
-#line 145 "minic.y" /* yacc.c:1661  */
+#line 148 "minic.y" /* yacc.c:1661  */
     { cout<<"l"<<(yyvsp[-2])<<":"<<endl; }
-#line 1501 "y.tab.c" /* yacc.c:1661  */
+#line 1509 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 37:
-#line 147 "minic.y" /* yacc.c:1661  */
+#line 150 "minic.y" /* yacc.c:1661  */
     { cout<<"l"<<(yyvsp[(-3) - (0)])<<":"<<endl; }
-#line 1507 "y.tab.c" /* yacc.c:1661  */
+#line 1515 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 40:
-#line 156 "minic.y" /* yacc.c:1661  */
+#line 159 "minic.y" /* yacc.c:1661  */
     { (yyval) = (yyvsp[0]); }
-#line 1513 "y.tab.c" /* yacc.c:1661  */
+#line 1521 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 41:
-#line 157 "minic.y" /* yacc.c:1661  */
+#line 160 "minic.y" /* yacc.c:1661  */
     {(yyval) = (yyvsp[0]);}
-#line 1519 "y.tab.c" /* yacc.c:1661  */
+#line 1527 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 42:
-#line 159 "minic.y" /* yacc.c:1661  */
+#line 162 "minic.y" /* yacc.c:1661  */
     {
     string varId = getNewTmpVar(nowEnv, glb_id);
     cout<<"var "<<varId<<endl;
     cout<<varId<<" = ! "<<(yyvsp[0])<<endl;
     (yyval) = varId;
   }
-#line 1530 "y.tab.c" /* yacc.c:1661  */
+#line 1538 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 43:
-#line 166 "minic.y" /* yacc.c:1661  */
+#line 169 "minic.y" /* yacc.c:1661  */
     {
     string varId = getNewTmpVar(nowEnv, glb_id);
     cout<<"var "<<varId<<endl;
     cout<<varId<<" = - "<<(yyvsp[0])<<endl;
     (yyval) = varId;
   }
-#line 1541 "y.tab.c" /* yacc.c:1661  */
+#line 1549 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 44:
-#line 173 "minic.y" /* yacc.c:1661  */
+#line 176 "minic.y" /* yacc.c:1661  */
     {
+    Env* tmpEnv = nowEnv;
+    while(tmpEnv->funcPara.find((yyvsp[-3])) == tmpEnv->funcPara.end())
+      tmpEnv = tmpEnv->pre;
+    string declNum = tmpEnv->funcPara[(yyvsp[-3])];
+    if((yyvsp[-1]) != declNum) yyerror("Parameter number is not equal\n");
     string varId = getNewTmpVar(nowEnv, glb_id);
     cout<<"var "<<varId<<endl;
     cout<<varId<<" = call f_"+(yyvsp[-3])<<endl;
     (yyval) = varId;
   }
-#line 1552 "y.tab.c" /* yacc.c:1661  */
+#line 1565 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 45:
-#line 180 "minic.y" /* yacc.c:1661  */
+#line 188 "minic.y" /* yacc.c:1661  */
     {
       string varId = getNewTmpVar(nowEnv, glb_id);
       cout<<"var "<<varId<<endl;
@@ -1560,182 +1573,188 @@ yyreduce:
       cout<<varId<<" = "<<(yyvsp[-3])<<"["<<varId<<"]"<<endl;
       (yyval) = varId;
     }
-#line 1564 "y.tab.c" /* yacc.c:1661  */
+#line 1577 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 46:
-#line 188 "minic.y" /* yacc.c:1661  */
+#line 196 "minic.y" /* yacc.c:1661  */
     {(yyval) = (yyvsp[-1]);}
-#line 1570 "y.tab.c" /* yacc.c:1661  */
+#line 1583 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 47:
-#line 192 "minic.y" /* yacc.c:1661  */
+#line 200 "minic.y" /* yacc.c:1661  */
     {(yyval) = (yyvsp[0]);}
-#line 1576 "y.tab.c" /* yacc.c:1661  */
+#line 1589 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 48:
-#line 194 "minic.y" /* yacc.c:1661  */
+#line 202 "minic.y" /* yacc.c:1661  */
     {
     string varId = getNewTmpVar(nowEnv, glb_id);
     cout<<"var "<<varId<<endl;
     cout<<varId<<" = "<<(yyvsp[-2])<<" * "<<(yyvsp[0])<<endl;
     (yyval) = varId;
   }
-#line 1587 "y.tab.c" /* yacc.c:1661  */
+#line 1600 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 49:
-#line 201 "minic.y" /* yacc.c:1661  */
+#line 209 "minic.y" /* yacc.c:1661  */
     {
     string varId = getNewTmpVar(nowEnv, glb_id);
     cout<<"var "<<varId<<endl;
     cout<<varId<<" = "<<(yyvsp[-2])<<" / "<<(yyvsp[0])<<endl;
     (yyval) = varId;
   }
-#line 1598 "y.tab.c" /* yacc.c:1661  */
+#line 1611 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 50:
-#line 208 "minic.y" /* yacc.c:1661  */
+#line 216 "minic.y" /* yacc.c:1661  */
     {
     string varId = getNewTmpVar(nowEnv,glb_id);
     cout<<"var "<<varId<<endl;
     cout<<varId<<" = "<<(yyvsp[-2])<<" % "<<(yyvsp[0])<<endl;
     (yyval) = varId;
   }
-#line 1609 "y.tab.c" /* yacc.c:1661  */
+#line 1622 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 51:
-#line 217 "minic.y" /* yacc.c:1661  */
+#line 225 "minic.y" /* yacc.c:1661  */
     {(yyval) = (yyvsp[0]);}
-#line 1615 "y.tab.c" /* yacc.c:1661  */
+#line 1628 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 52:
-#line 219 "minic.y" /* yacc.c:1661  */
+#line 227 "minic.y" /* yacc.c:1661  */
     {
     string varId = getNewTmpVar(nowEnv,glb_id);
     cout<<"var "<<varId<<endl;
     cout<<varId<<" = "<<(yyvsp[-2])<<" + "<<(yyvsp[0])<<endl;
     (yyval) = varId;
   }
-#line 1626 "y.tab.c" /* yacc.c:1661  */
+#line 1639 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 53:
-#line 226 "minic.y" /* yacc.c:1661  */
+#line 234 "minic.y" /* yacc.c:1661  */
     {
     string varId = getNewTmpVar(nowEnv,glb_id);
     cout<<"var "<<varId<<endl;
     cout<<varId<<" = "<<(yyvsp[-2])<<" - "<<(yyvsp[0])<<endl;
     (yyval) = varId;
   }
-#line 1637 "y.tab.c" /* yacc.c:1661  */
+#line 1650 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 54:
-#line 235 "minic.y" /* yacc.c:1661  */
+#line 243 "minic.y" /* yacc.c:1661  */
     {(yyval) = (yyvsp[0]);}
-#line 1643 "y.tab.c" /* yacc.c:1661  */
+#line 1656 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 55:
-#line 237 "minic.y" /* yacc.c:1661  */
+#line 245 "minic.y" /* yacc.c:1661  */
     {
     string varId = getNewTmpVar(nowEnv,glb_id);
     cout<<"var "<<varId<<endl;
     cout<<varId<<" = "<<(yyvsp[-2])<<" < "<<(yyvsp[0])<<endl;
     (yyval) = varId;
   }
-#line 1654 "y.tab.c" /* yacc.c:1661  */
+#line 1667 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 56:
-#line 244 "minic.y" /* yacc.c:1661  */
+#line 252 "minic.y" /* yacc.c:1661  */
     {
     string varId = getNewTmpVar(nowEnv,glb_id);
     cout<<"var "<<varId<<endl;
     cout<<varId<<" = "<<(yyvsp[-2])<<" == "<<(yyvsp[0])<<endl;
     (yyval) = varId;
   }
-#line 1665 "y.tab.c" /* yacc.c:1661  */
+#line 1678 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 57:
-#line 251 "minic.y" /* yacc.c:1661  */
+#line 259 "minic.y" /* yacc.c:1661  */
     {
     string varId = getNewTmpVar(nowEnv,glb_id);
     cout<<"var "<<varId<<endl;
     cout<<varId<<" = "<<(yyvsp[-2])<<" > "<<(yyvsp[0])<<endl;
     (yyval) = varId;
   }
-#line 1676 "y.tab.c" /* yacc.c:1661  */
+#line 1689 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 58:
-#line 258 "minic.y" /* yacc.c:1661  */
+#line 266 "minic.y" /* yacc.c:1661  */
     {
     string varId = getNewTmpVar(nowEnv,glb_id);
     cout<<"var "<<varId<<endl;
     cout<<varId<<" = "<<(yyvsp[-2])<<" != "<<(yyvsp[0])<<endl;
     (yyval) = varId;
   }
-#line 1687 "y.tab.c" /* yacc.c:1661  */
+#line 1700 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 60:
-#line 269 "minic.y" /* yacc.c:1661  */
+#line 277 "minic.y" /* yacc.c:1661  */
     {
     string varId = getNewTmpVar(nowEnv,glb_id);
     cout<<"var "<<varId<<endl;
     cout<<varId<<" = "<<(yyvsp[-2])<<" && "<<(yyvsp[0])<<endl;
     (yyval) = varId;
   }
-#line 1698 "y.tab.c" /* yacc.c:1661  */
+#line 1711 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 61:
-#line 276 "minic.y" /* yacc.c:1661  */
+#line 284 "minic.y" /* yacc.c:1661  */
     {
     string varId = getNewTmpVar(nowEnv,glb_id);
     cout<<"var "<<varId<<endl;
     cout<<varId<<" = "<<(yyvsp[-2])<<" || "<<(yyvsp[0])<<endl;
     (yyval) = varId;
   }
-#line 1709 "y.tab.c" /* yacc.c:1661  */
+#line 1722 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 62:
-#line 285 "minic.y" /* yacc.c:1661  */
+#line 293 "minic.y" /* yacc.c:1661  */
     {(yyval) = (yyvsp[0]);}
-#line 1715 "y.tab.c" /* yacc.c:1661  */
+#line 1728 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 63:
-#line 296 "minic.y" /* yacc.c:1661  */
-    {cout<<"param "<<(yyvsp[0])<<endl;}
-#line 1721 "y.tab.c" /* yacc.c:1661  */
+#line 298 "minic.y" /* yacc.c:1661  */
+    {cout<<"param "<<(yyvsp[0])<<endl;(yyval) = "1";}
+#line 1734 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 64:
-#line 304 "minic.y" /* yacc.c:1661  */
-    {cout<<"param "<<(yyvsp[0])<<endl;}
-#line 1727 "y.tab.c" /* yacc.c:1661  */
+#line 300 "minic.y" /* yacc.c:1661  */
+    {cout<<"param "<<(yyvsp[0])<<endl;(yyval) = to_string(stoi((yyvsp[-2])) + 1);}
+#line 1740 "y.tab.c" /* yacc.c:1661  */
+    break;
+
+  case 65:
+#line 302 "minic.y" /* yacc.c:1661  */
+    {(yyval) = "0";}
+#line 1746 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 66:
-#line 309 "minic.y" /* yacc.c:1661  */
+#line 306 "minic.y" /* yacc.c:1661  */
     {
     (yyval) = string(tokenString);
   }
-#line 1735 "y.tab.c" /* yacc.c:1661  */
+#line 1754 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 67:
-#line 313 "minic.y" /* yacc.c:1661  */
+#line 310 "minic.y" /* yacc.c:1661  */
     {
     string varId;int flag = 1;
     for(int i = 0;i < 5;i++)
@@ -1767,11 +1786,11 @@ yyreduce:
       }
     }
   }
-#line 1771 "y.tab.c" /* yacc.c:1661  */
+#line 1790 "y.tab.c" /* yacc.c:1661  */
     break;
 
 
-#line 1775 "y.tab.c" /* yacc.c:1661  */
+#line 1794 "y.tab.c" /* yacc.c:1661  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1999,7 +2018,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 344 "minic.y" /* yacc.c:1906  */
+#line 341 "minic.y" /* yacc.c:1906  */
 
 void yyerror(const char *s)
 {

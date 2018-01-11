@@ -1,4 +1,4 @@
-.comm v0,1600,4
+.comm v0,160000,4
   .text
   .align 2
   .global f_T2
@@ -41,7 +41,7 @@ f_T7:
   li s10,1
   add t4,t1,s10
   ble t4,t3,.l1
-  mul t4,s8,t3
+  slli t4,t3,4
   mv s11,t2
   add s11,s11,t4
   lw t4,0(s11)
@@ -82,29 +82,29 @@ f_T16:
   mv t6,t4
 .l3:
   ble t6,t5,.l4
-  mul a0,s8,t5
+  slli a0,t5,4
   mv s11,t2
   add s11,s11,a0
   lw a0,0(s11)
-  mul a1,s8,t1
+  slli a1,t1,4
   mv s11,t2
   add s11,s11,a1
   lw a1,0(s11)
   ble a0,a1,.l5
-  mul a0,s8,t5
+  slli a0,t5,4
   mv s11,t2
   add s11,s11,a0
   lw a0,0(s11)
   mv a1,a0
-  mul a0,s8,t6
+  slli a0,t6,4
   mv s11,t2
   add s11,s11,a0
   lw a0,0(s11)
-  mul a2,s8,t5
+  slli a2,t5,4
   mv s11,t2
   add s11,s11,a2
   sw a0,0(s11)
-  mul a0,s8,t6
+  slli a0,t6,4
   mv s11,t2
   add s11,s11,a0
   sw a1,0(s11)
@@ -117,11 +117,11 @@ f_T16:
 .l6:
   j .l3
 .l4:
-  mul a0,s8,t5
+  slli a0,t5,4
   mv s11,t2
   add s11,s11,a0
   lw a0,0(s11)
-  mul a1,s8,t1
+  slli a1,t1,4
   mv s11,t2
   add s11,s11,a1
   lw a1,0(s11)
@@ -131,20 +131,20 @@ f_T16:
   li s10,1
   sub t5,t5,s10
 .l7:
-  mul a0,s8,t1
+  slli a0,t1,4
   mv s11,t2
   add s11,s11,a0
   lw a0,0(s11)
   mv a1,a0
-  mul a0,s8,t5
+  slli a0,t5,4
   mv s11,t2
   add s11,s11,a0
   lw a0,0(s11)
-  mul a2,s8,t1
+  slli a2,t1,4
   mv s11,t2
   add s11,s11,a2
   sw a0,0(s11)
-  mul a0,s8,t5
+  slli a0,t5,4
   mv s11,t2
   add s11,s11,a0
   sw a1,0(s11)
@@ -185,8 +185,8 @@ jr ra
   .global main
   .type main, @function
 main:
-  add sp,sp,-432
-  sw ra,428(sp)
+  add sp,sp,-160112
+  sw ra,160108(sp)
   li s8,4
   call getint
   mv t2,a0
@@ -196,12 +196,12 @@ main:
   add t4,t2,s10
   ble t4,t3,.l10
   sw t2,48(sp)
-  sw t3,376(sp)
+  sw t3,160056(sp)
   call getint
   lw t2,48(sp)
-  lw t3,376(sp)
+  lw t3,160056(sp)
   mv t4,a0
-  mul t5,s8,t3
+  slli t5,t3,4
   add s11,sp,52
   add s11,s11,t5
   sw t4,0(s11)
@@ -230,7 +230,7 @@ main:
   call f_T7
   mv t0,a0
   li a0,0
-  lw ra,428(sp)
-add sp,sp,432
+  lw ra,160108(sp)
+add sp,sp,160112
 jr ra
   .size main, .-main

@@ -1,4 +1,4 @@
-int a[100];
+int a[10000];
 int c;
 int getint();
 int putint(int x);
@@ -72,7 +72,7 @@ int quicksort(int array[100], int maxlen, int begin, int end)
 int main()
 {
     int n;
-    int array[20];
+    int array[10000];
     n = getint();
     int i;
     i = 1;

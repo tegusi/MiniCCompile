@@ -57,6 +57,7 @@ FuncDefn :
       cout<<"f_"<<$2<<" [0]"<<endl;
     else
       cout<<"f_"<<$2<<" ["<<nowEnv->symTable.size()<<"]"<<endl;
+    nowEnv->pre->funcPara[$2] = $4;
     isDecl = 0;
   }
   '{'FuncBody'}'
@@ -68,17 +69,19 @@ FuncDecl :
   {
     // nowEnv->symTable.insert(maps($2,getNewOriVar(nowEnv, glb_id)));
     nowEnv = nowEnv->pre;
+    nowEnv->funcPara[$2] = $4;
     isDecl = 0;
     isParam = 0;
   }
   ;
 
 ParaList :
-  {nowEnv = newEnv(nowEnv);isParam = 1;}
+  {nowEnv = newEnv(nowEnv);isParam = 1;$$ = "1";}
   VarDecl
   | ParaList ',' VarDecl
+  {$$ = to_string(stoi($1) + 1);}
   |
-  { nowEnv = newEnv(nowEnv);isParam = 1;}
+  { nowEnv = newEnv(nowEnv);isParam = 1;$$ = "0";}
   ;
 
 FuncBody :
@@ -171,6 +174,11 @@ p1Expression :
   }
   | Identifier '(' IdenList ')'
   {
+    Env* tmpEnv = nowEnv;
+    while(tmpEnv->funcPara.find($1) == tmpEnv->funcPara.end())
+      tmpEnv = tmpEnv->pre;
+    string declNum = tmpEnv->funcPara[$1];
+    if($3 != declNum) yyerror("Parameter number is not equal\n");
     string varId = getNewTmpVar(nowEnv, glb_id);
     cout<<"var "<<varId<<endl;
     cout<<varId<<" = call f_"+$1<<endl;
@@ -286,23 +294,12 @@ Expression :
   ;
 
 IdenList :
-  // Integer
-  // {cout<<"param "<<$1<<endl;}
-  // |
-  // Identifier
-  // {cout<<"param "<<$1<<endl;}
-  // |
   Expression
-  {cout<<"param "<<$1<<endl;}
-    // {$$ = newExpNode(IdK);$$->sibling = NULL;}
-  // | IdenList ',' Identifier
-  // {cout<<"param "<<$3<<endl;}
-  // | IdenList ',' Integer
-  // {cout<<"param "<<$3<<endl;}
-  //   // {$$ = newExpNode(IdK);$1->sibling = $3;$3->sibling = NULL;$$->sibling = $1;}
+  {cout<<"param "<<$1<<endl;$$ = "1";}
   | IdenList ',' Expression
-  {cout<<"param "<<$3<<endl;}
+  {cout<<"param "<<$3<<endl;$$ = to_string(stoi($1) + 1);}
   |
+  {$$ = "0";}
   ;
 
 Integer : INTEGER

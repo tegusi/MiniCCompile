@@ -1,4 +1,4 @@
-v0 = malloc 400
+v0 = malloc 40000
 f_T2 [3] [19]
 s8 = 4
 t1 = a0
@@ -156,7 +156,7 @@ a0 = 1
 return
 l8:
 end f_T16
-f_main [0] [106]
+f_main [0] [40026]
 s8 = 4
 call f_getint
 t2 = a0
@@ -166,10 +166,10 @@ s10 = 1
 t4 = t2 + s10
 if t3 >= t4 goto l10
 store t2 12
-store t3 94
+store t3 40014
 call f_getint
 load 12 t2
-load 94 t3
+load 40014 t3
 t4 = a0
 t5 = s8 * t3
 loadaddr 13 s11

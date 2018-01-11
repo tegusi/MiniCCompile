@@ -71,7 +71,18 @@ Expression:
     else if($4 == "-")
       printf("sub %s,%s,%s\n",$1.c_str(),$3.c_str(),$5.c_str());
     else if($4 == "*")
+    {
+      if($3 == "s8")
+      {
+      printf("slli %s,%s,2\n",$1.c_str(),$5.c_str());
+      }
+      else if($5 == "s8")
+      {
+      printf("slli %s,%s,2\n",$1.c_str(),$3.c_str());
+      }
+      else
       printf("mul %s,%s,%s\n",$1.c_str(),$3.c_str(),$5.c_str());
+    }
     else if($4 == "/")
       printf("div %s,%s,%s\n",$1.c_str(),$3.c_str(),$5.c_str());
     else if($4 == "%")

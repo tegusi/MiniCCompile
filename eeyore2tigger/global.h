@@ -86,7 +86,6 @@ struct variable{
 
 struct myfunction{
   string name;
-  vector<int> savedReg;
   int stackSize,varCnt;
   myfunction(string _name,int _varCnt)
   {

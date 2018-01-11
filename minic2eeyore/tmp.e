@@ -1,4 +1,4 @@
-var 40000 T0
+var 400 T0
 var T1
 f_T2 [3]
 var T3
@@ -123,67 +123,3 @@ param p0
 param p1
 param p2
 param T17
-var t43
-t43 = call f_T16
-T42 = t43
-param p0
-param p1
-param T18
-param p3
-var t44
-t44 = call f_T16
-T42 = t44
-return 1
-goto l8
-l2:
-return 1
-l8:
-end f_T16
-f_main [0]
-var T45
-var 40000 T46
-var t47
-t47 = call f_getint
-T45 = t47
-var T48
-T48 = 1
-l9:
-var t49
-t49 = T45 + 1
-var t50
-t50 = T48 < t49
-if t50 == 0 goto l10
-var t51
-t51 = call f_getint
-var t52
-t52 = 4 * T48
-T46[t52] = t51
-var t53
-t53 = T48 + 1
-T48 = t53
-goto l9
-l10:
-var T54
-param T46
-param T45
-var t55
-t55 = call f_T7
-T54 = t55
-var T56
-T56 = 1
-var T57
-T57 = T45
-param T46
-param T45
-param T56
-param T57
-var t58
-t58 = call f_T16
-T54 = t58
-param T46
-param T45
-var t59
-t59 = call f_T7
-T54 = t59
-return 0
-end f_main

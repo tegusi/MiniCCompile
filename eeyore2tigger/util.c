@@ -170,7 +170,7 @@ void linear_scan() {
 void optimize()
 {
   auto ptr = blocks.begin();
-  while(ptr != blocks.end())//原本的窥孔优化
+  while(ptr != blocks.end())//窥孔优化
   {
     if((ptr->type == iOP1 || ptr->type == iCALL)
       && (ptr+1)->type == iASS
@@ -238,7 +238,7 @@ void optimize()
   }
   liveAnalysis();
   ptr = blocks.begin();
-  while(ptr != blocks.end())
+  while(ptr != blocks.end())//无用代码消除
   {
     if(synTable.find(ptr->arg1) == synTable.end()) {ptr++;continue;}
     if(vars[synTable[ptr->arg1]].ed == -1 && ptr->type != iCALL)

@@ -60,6 +60,7 @@ typedef struct environment
     struct environment* pre;
     map<string,string> symTable;
     map<string,string> declList;
+    map<string,string> funcPara;
     int varCnt;
   } Env;
 

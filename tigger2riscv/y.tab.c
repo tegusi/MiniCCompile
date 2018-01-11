@@ -462,9 +462,9 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint8 yyrline[] =
 {
        0,    20,    20,    21,    22,    26,    35,    41,    40,    62,
-      63,    66,   109,   116,   126,   130,   134,   138,   142,   146,
-     161,   165,   178,   182,   186,   190,   195,   199,   204,   213,
-     217,   221,   225,   229,   233
+      63,    66,   120,   127,   137,   141,   145,   149,   153,   157,
+     172,   176,   189,   193,   197,   201,   206,   210,   215,   224,
+     228,   232,   236,   240,   244
 };
 #endif
 
@@ -1335,7 +1335,18 @@ yyreduce:
     else if((yyvsp[-1]) == "-")
       printf("sub %s,%s,%s\n",(yyvsp[-4]).c_str(),(yyvsp[-2]).c_str(),(yyvsp[0]).c_str());
     else if((yyvsp[-1]) == "*")
+    {
+      if((yyvsp[-2]) == "s8")
+      {
+      printf("slli %s,%s,4\n",(yyvsp[-4]).c_str(),(yyvsp[0]).c_str());
+      }
+      else if((yyvsp[0]) == "s8")
+      {
+      printf("slli %s,%s,4\n",(yyvsp[-4]).c_str(),(yyvsp[-2]).c_str());
+      }
+      else
       printf("mul %s,%s,%s\n",(yyvsp[-4]).c_str(),(yyvsp[-2]).c_str(),(yyvsp[0]).c_str());
+    }
     else if((yyvsp[-1]) == "/")
       printf("div %s,%s,%s\n",(yyvsp[-4]).c_str(),(yyvsp[-2]).c_str(),(yyvsp[0]).c_str());
     else if((yyvsp[-1]) == "%")
@@ -1370,22 +1381,22 @@ yyreduce:
       break;
     }
   }
-#line 1374 "y.tab.c" /* yacc.c:1661  */
+#line 1385 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 12:
-#line 110 "tigger.y" /* yacc.c:1661  */
+#line 121 "tigger.y" /* yacc.c:1661  */
     {printf("  ");
     if((yyvsp[-1]) == "+")
       printf("add %s,%s,%s\n",(yyvsp[-4]).c_str(),(yyvsp[-3]).c_str(),(yyvsp[-2]).c_str());
     else if((yyvsp[-1]) == "<")
       printf("slti %s,%s,%s\n",(yyvsp[-4]).c_str(),(yyvsp[-3]).c_str(),(yyvsp[-2]).c_str());
   }
-#line 1385 "y.tab.c" /* yacc.c:1661  */
+#line 1396 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 13:
-#line 117 "tigger.y" /* yacc.c:1661  */
+#line 128 "tigger.y" /* yacc.c:1661  */
     {printf("  ");
     if((yyvsp[-1]) == "-")
       printf("sub %s,zero,%s\n",(yyvsp[-3]).c_str(),(yyvsp[0]).c_str());
@@ -1395,51 +1406,51 @@ yyreduce:
       printf("and %s,%s,0xff\n", (yyvsp[-3]).c_str(), (yyvsp[-3]).c_str());
     }
   }
-#line 1399 "y.tab.c" /* yacc.c:1661  */
+#line 1410 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 14:
-#line 127 "tigger.y" /* yacc.c:1661  */
+#line 138 "tigger.y" /* yacc.c:1661  */
     {printf("  ");
     cout<<"li "<<(yyvsp[-2])<<","<<(yyvsp[0])<<endl;
   }
-#line 1407 "y.tab.c" /* yacc.c:1661  */
+#line 1418 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 15:
-#line 131 "tigger.y" /* yacc.c:1661  */
+#line 142 "tigger.y" /* yacc.c:1661  */
     {printf("  ");
     cout<<"mv "<<(yyvsp[-2])<<","<<(yyvsp[0])<<endl;
   }
-#line 1415 "y.tab.c" /* yacc.c:1661  */
+#line 1426 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 16:
-#line 135 "tigger.y" /* yacc.c:1661  */
+#line 146 "tigger.y" /* yacc.c:1661  */
     {printf("  ");
     cout<<"li "<<(yyvsp[-4])<<","<<(yyvsp[-2])<<endl;
   }
-#line 1423 "y.tab.c" /* yacc.c:1661  */
+#line 1434 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 17:
-#line 139 "tigger.y" /* yacc.c:1661  */
+#line 150 "tigger.y" /* yacc.c:1661  */
     {printf("  ");
     cout<<"sw "<<(yyvsp[0])<<","<<(yyvsp[-3])<<"("<<(yyvsp[-5])<<")"<<endl;
   }
-#line 1431 "y.tab.c" /* yacc.c:1661  */
+#line 1442 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 18:
-#line 143 "tigger.y" /* yacc.c:1661  */
+#line 154 "tigger.y" /* yacc.c:1661  */
     {printf("  ");
     cout<<"lw "<<(yyvsp[-5])<<","<<(yyvsp[-1])<<"("<<(yyvsp[-3])<<")"<<endl;
   }
-#line 1439 "y.tab.c" /* yacc.c:1661  */
+#line 1450 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 19:
-#line 147 "tigger.y" /* yacc.c:1661  */
+#line 158 "tigger.y" /* yacc.c:1661  */
     {printf("  ");
     if((yyvsp[-3]) == "<")
       cout<<"blt "<<(yyvsp[-4])<<","<<(yyvsp[-2])<<",."<<(yyvsp[0])<<endl;
@@ -1454,19 +1465,19 @@ yyreduce:
     else if((yyvsp[-3]) == ">=")
       cout<<"ble "<<(yyvsp[-2])<<","<<(yyvsp[-4])<<",."<<(yyvsp[0])<<endl;
   }
-#line 1458 "y.tab.c" /* yacc.c:1661  */
+#line 1469 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 20:
-#line 162 "tigger.y" /* yacc.c:1661  */
+#line 173 "tigger.y" /* yacc.c:1661  */
     {printf("  ");
     cout<<"j ."<<(yyvsp[0])<<endl;
   }
-#line 1466 "y.tab.c" /* yacc.c:1661  */
+#line 1477 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 21:
-#line 166 "tigger.y" /* yacc.c:1661  */
+#line 177 "tigger.y" /* yacc.c:1661  */
     {printf("  ");
 
   if((yyvsp[0]) == "f_putint")
@@ -1479,107 +1490,107 @@ yyreduce:
       (yyvsp[0]) = "getchar";
     cout<<"call "<<(yyvsp[0])<<endl;
   }
-#line 1483 "y.tab.c" /* yacc.c:1661  */
+#line 1494 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 22:
-#line 179 "tigger.y" /* yacc.c:1661  */
+#line 190 "tigger.y" /* yacc.c:1661  */
     {
     cout<<"."<<(yyvsp[-1])<<":"<<endl;
   }
-#line 1491 "y.tab.c" /* yacc.c:1661  */
+#line 1502 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 23:
-#line 183 "tigger.y" /* yacc.c:1661  */
+#line 194 "tigger.y" /* yacc.c:1661  */
     {printf("  ");
     printf("sw %s,%d(sp)\n",(yyvsp[-1]).c_str(),stoi((yyvsp[0]))*4);
   }
-#line 1499 "y.tab.c" /* yacc.c:1661  */
+#line 1510 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 24:
-#line 187 "tigger.y" /* yacc.c:1661  */
+#line 198 "tigger.y" /* yacc.c:1661  */
     {printf("  ");
     printf("lw %s,%d(sp)\n",(yyvsp[0]).c_str(),stoi((yyvsp[-1]))*4);
   }
-#line 1507 "y.tab.c" /* yacc.c:1661  */
+#line 1518 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 25:
-#line 191 "tigger.y" /* yacc.c:1661  */
+#line 202 "tigger.y" /* yacc.c:1661  */
     {printf("  ");
     printf("lui %s,%%hi(%s)\n",(yyvsp[0]).c_str(),(yyvsp[-1]).c_str());
     printf("lw %s,%%lo(%s)(%s)\n",(yyvsp[0]).c_str(),(yyvsp[-1]).c_str(),(yyvsp[0]).c_str());
   }
-#line 1516 "y.tab.c" /* yacc.c:1661  */
+#line 1527 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 26:
-#line 196 "tigger.y" /* yacc.c:1661  */
+#line 207 "tigger.y" /* yacc.c:1661  */
     {printf("  ");
     printf("add %s,sp,%d\n",(yyvsp[0]).c_str(),stoi((yyvsp[-1])) * 4);
   }
-#line 1524 "y.tab.c" /* yacc.c:1661  */
+#line 1535 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 27:
-#line 200 "tigger.y" /* yacc.c:1661  */
+#line 211 "tigger.y" /* yacc.c:1661  */
     {printf("  ");
     printf("lui %s,%%hi(%s)\n",(yyvsp[0]).c_str(),(yyvsp[-1]).c_str());
     printf("add %s,%s,%%lo(%s)\n",(yyvsp[0]).c_str(),(yyvsp[0]).c_str(),(yyvsp[-1]).c_str());
   }
-#line 1533 "y.tab.c" /* yacc.c:1661  */
+#line 1544 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 28:
-#line 205 "tigger.y" /* yacc.c:1661  */
+#line 216 "tigger.y" /* yacc.c:1661  */
     {printf("  ");
     printf("lw ra,%d(sp)\n", stack_size - 4);
     printf("add sp,sp,%d\n", stack_size);
     printf("jr ra\n");
   }
-#line 1543 "y.tab.c" /* yacc.c:1661  */
+#line 1554 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 29:
-#line 214 "tigger.y" /* yacc.c:1661  */
+#line 225 "tigger.y" /* yacc.c:1661  */
     {(yyval) = string(tokenString);}
-#line 1549 "y.tab.c" /* yacc.c:1661  */
+#line 1560 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 30:
-#line 218 "tigger.y" /* yacc.c:1661  */
+#line 229 "tigger.y" /* yacc.c:1661  */
     {(yyval) = string(tokenString);}
-#line 1555 "y.tab.c" /* yacc.c:1661  */
+#line 1566 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 31:
-#line 222 "tigger.y" /* yacc.c:1661  */
+#line 233 "tigger.y" /* yacc.c:1661  */
     {(yyval) = string(tokenString);}
-#line 1561 "y.tab.c" /* yacc.c:1661  */
+#line 1572 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 32:
-#line 226 "tigger.y" /* yacc.c:1661  */
+#line 237 "tigger.y" /* yacc.c:1661  */
     {(yyval) = string(tokenString);}
-#line 1567 "y.tab.c" /* yacc.c:1661  */
+#line 1578 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 33:
-#line 230 "tigger.y" /* yacc.c:1661  */
+#line 241 "tigger.y" /* yacc.c:1661  */
     {(yyval) = string(tokenString);}
-#line 1573 "y.tab.c" /* yacc.c:1661  */
+#line 1584 "y.tab.c" /* yacc.c:1661  */
     break;
 
   case 34:
-#line 234 "tigger.y" /* yacc.c:1661  */
+#line 245 "tigger.y" /* yacc.c:1661  */
     {(yyval) = string(tokenString);}
-#line 1579 "y.tab.c" /* yacc.c:1661  */
+#line 1590 "y.tab.c" /* yacc.c:1661  */
     break;
 
 
-#line 1583 "y.tab.c" /* yacc.c:1661  */
+#line 1594 "y.tab.c" /* yacc.c:1661  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1807,7 +1818,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 235 "tigger.y" /* yacc.c:1906  */
+#line 246 "tigger.y" /* yacc.c:1906  */
 
 void yyerror(const char *s)
 {
