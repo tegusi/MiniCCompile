@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99996 (TeX Live 2016) (preloaded format=xelatex 2016.12.18)  12 JAN 2018 00:18
+This is XeTeX, Version 3.14159265-2.6-0.99996 (TeX Live 2016) (preloaded format=xelatex 2016.12.18)  12 JAN 2018 21:11
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1307,7 +1307,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 
 LaTeX Font Info:    Font shape `EU1/STSong(0)/m/sl' in size <10.53937> not available
 (Font)              Font shape `EU1/STSong(0)/m/it' tried instead on input line 20.
- [2]
+ [2] [3]
 *************************************************
 * fontspec warning: "script-not-exist"
 * 
@@ -1329,7 +1329,7 @@ LaTeX Font Info:    Font shape `EU1/STSong(0)/m/sl' in size <10.53937> not avail
 . 
 . Could not resolve font STFangsong/I (it probably doesn't exist).
 .................................................
-LaTeX Font Info:    Try loading font information for EU1+lmtt on input line 41.
+LaTeX Font Info:    Try loading font information for EU1+lmtt on input line 43.
 (/usr/local/texlive/2016/texmf-dist/tex/latex/euenc/eu1lmtt.fd
 File: eu1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
@@ -1345,16 +1345,16 @@ File: eu1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 . <->"STFangsong/OT:embolden=4;"
 . - 'bold small caps'  (bx/sc) with NFSS spec.: 
 .................................................
- [3] [4]
+ [4] [5]
 File: latexIMG/MiniCEnv.png Graphic file (type QTm)
- <use  "latexIMG/MiniCEnv.png" > [5] [6] [7] [8] [9] [10] [11] [12] [13] (./report.aux) ) 
+ <use  "latexIMG/MiniCEnv.png" > [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17] [18] [19] (./report.aux) ) 
 Here is how much of TeX's memory you used:
- 22033 strings out of 493591
- 452408 string characters out of 6143545
- 506776 words of memory out of 5000000
- 25226 multiletter control sequences out of 15000+600000
+ 22074 strings out of 493591
+ 454976 string characters out of 6143545
+ 520790 words of memory out of 5000000
+ 25267 multiletter control sequences out of 15000+600000
  7662 words of font info for 60 fonts, out of 8000000 for 9000
  1347 hyphenation exceptions out of 8191
- 65i,6n,77p,10471b,1557s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 65i,13n,77p,10471b,1589s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on report.pdf (13 pages).
+Output written on report.pdf (19 pages).

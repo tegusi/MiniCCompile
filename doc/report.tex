@@ -6,7 +6,7 @@
 \usepackage{listings}
 \linespread{1.5}
 \newfontfamily\listingsfont{Menlo}
-\lstset{breaklines,frame=single,basicstyle=\linespread{0.6}}
+\lstset{lineskip={-0.5pt},breaklines,frame=single,basicstyle=\linespread{0.6}}
 \usepackage[nounderscore]{syntax}
 \setlength{\parskip}{1em}
 \newenvironment{typewriterfont}{\ttfamily}{\par}
@@ -36,6 +36,8 @@ Yacc是一个采用LALR(1)语法分析的工具，输入BNF并添加语义规则
 \section{MiniC}
 
 这部分的任务是分析MiniC的语法并翻译成Eeyore。MiniC的语法比C简单了许多，不过原来的文档提供的BNF有许多漏洞，我也在基础之上加上了许多的小优化，下面是我实现的BNF。
+
+\newpage
 \subsection{BNF}
 \setlength{\grammarindent}{8em} % increase separation between LHS/RHS
 \begin{typewriterfont}
@@ -86,26 +88,59 @@ Yacc是一个采用LALR(1)语法分析的工具，输入BNF并添加语义规则
 
 \begin{itemize}
   \item \textbf{增加了对新语法的支持}
-
+  \begin{lstlisting}[basicstyle=\listingsfont]
+  int test(){
+    f(g(x) + a && b);//无返回值表达式+参数优化
+    int a = 1;//直接赋值
+    int g() {};//函数中定义函数
+  }
+  \end{lstlisting}
   与原来的BNF比较，增加了
   \begin{itemize}
     \item 无返回值表达式，如直接调用函数
     \item 表达式传入任何可传入的位置（如函数参数）
     \item 声明时直接赋值
+    \item 支持在函数中声明与定义函数，作用域为最近的域。
+    \item 去掉对main函数的强制要求
   \end{itemize}
-
-  同时支持在函数中声明与定义函数，作用域为最近的域。
 
   \item \textbf{对代码进行检查}
   \begin{itemize}
     \item 未声明变量或函数
+
     直接报错，输出出错行数并停止翻译
+    \begin{lstlisting}[basicstyle=\listingsfont]
+    int main(){
+      t(); //Function not declared at line 2
+    }
+    \end{lstlisting}
     \item 重复定义变量
+
     采用第一次定义的变量
+    \begin{lstlisting}[basicstyle=\listingsfont]
+    int main(){
+      int a;
+      int a[100];//Ignored
+    }
+    \end{lstlisting}
     \item 函数参数数量不匹配
+
     直接报错，输出出错行数
+    \begin{lstlisting}[basicstyle=\listingsfont]
+    int null(int a);
+    int main(){
+      null(); //Function parameter error at line 3
+    }
+    \end{lstlisting}
     \item 语法错误
+
     直接报错，输出出错行数
+    \begin{lstlisting}[basicstyle=\listingsfont]
+    int null(int a);
+    int main(){
+      null(; //Syntax error at line 3
+    }
+    \end{lstlisting}
   \end{itemize}
 
 \end{itemize}
@@ -123,13 +158,28 @@ typedef struct environment
   } Env;
 \end{lstlisting}
 
-整个过程使用了On-the-fly动态生成的方法，同时考虑到并不需要特别多的依赖关系，每个非终结符号都可以用string代表它所代表的变量，整个过程非常的简洁。因为这个原因，符号表中只需存储MiniC中每个变量名和对应的eeyore临时变量名，用一个map表示符号表即可。而不同的环境用一个链表串起来，在每个环境中存储的信息只有符号表、已声明的变量集合（用来判断是否有未声明的变量）和函数参数。
-
 \begin{figure}[htbp]
-  \centering\includegraphics[width=8cm]{latexIMG/MiniCEnv.png}
+  \centering\includegraphics[width=10cm]{latexIMG/MiniCEnv.png}
   \caption{环境示意图}
   \label{}
 \end{figure}
+
+整个过程使用了On-the-fly动态生成的方法，同时考虑到并不需要特别多的依赖关系，每个非终结符号都可以用string代表它所代表的变量，整个过程非常的简洁。因为这个原因，符号表中只需存储MiniC中每个变量名和对应的eeyore临时变量名，用一个map表示符号表即可。而不同的环境用一个链表串起来，在每个环境中存储的信息只有符号表、已声明的变量集合（用来判断是否有未声明的变量）和函数参数。
+
+对于while和if的处理，用On-the-fly生成的话非常简洁，没有回填之类的一系列问题，结构如下：
+\begin{lstlisting}[basicstyle=\listingsfont]
+l1:
+if condition goto l2
+//Loop body
+goto l1
+l2:
+
+if condition goto l3
+if body
+l3
+\end{lstlisting}
+
+其他部分相对就简单得多，优先级我手动写了6个级别的非终结符号，但听佳晋说完全可以用left代替(捂脸)。
 
 \subsection{编写中遇到的问题}
 
@@ -143,14 +193,18 @@ typedef struct environment
 
 因为On-the-fly生成时不存在显式的语法树，有些必须的辅助信息（如判断是否为函数参数）需要作为继承属性输入到下层的非终结符号中，而我把每个符号的类型都设置成了string……因此我就用了各种方法对栈中进行传递，比如全局变量和临时的环境。
 
-总体来看，在MiniC翻译中用很简洁的On-the-fly生成取得了很好的效果，对代码错误也有一定的自动改正能力，不过生成的Eeyore代码还有很多的冗余，这将在之后的中间代码过程中逐步进行优化。
+总体来看，在MiniC翻译中用很简洁的On-the-fly生成取得了很好的效果，对代码错误也有一定的查错能力，不过生成的Eeyore代码还有很多的冗余，这将在之后的中间代码过程中逐步进行优化。
 
+\subsection{尚待改进之处}
+
+一个挺大的缺陷就是不支持短路表达式和++符号。短路表达式是非常有趣的一个内容，由于时间限制没有完成；++符号在生成代码时的顺序问题也是很精妙的。还有就是没有完成类型检查，对于强类型语言来说有一点缺陷。
 
 \section{Eeyore}
 
 从Eeyore翻译到更底层的Tigger是整个编译器的核心。在这个过程中，我们需要进行Eeyore代码的翻译和优化，并进行寄存器分配，最终生成Tigger代码。
 
 这阶段最大的挑战是要初步分析出每个函数的栈空间、将无限的变量分配到有限的寄存器和代码更细粒度的分解。
+\newpage
 \subsection{BNF}
 因为需要能在Eeyore模拟器上正确运行，这里的BNF和原来没有什么变化。
 \begin{typewriterfont}
@@ -188,9 +242,15 @@ typedef struct environment
 
 \subsection{特点}
 
+\begin{itemize}
+  \item 采用线性扫描的寄存器分配算法
+  \item 运用了多项优化手段
+  \item 某些寄存器分配了特定的用途
+\end{itemize}
+
 \subsection{实现}
 
-相对于原来复杂的语法树，Eeyore代码没有显式的多层嵌套，只有在分支的时候有两种分叉。在分析Eeyore代码时直接将代码存为链式结构，之后再对整个代码数组进行分析即可。
+相对于原来复杂的语法树，Eeyore代码没有显式的多层嵌套，只有在分支的时候有两种分叉。在分析Eeyore代码时直接将代码存为链式结构，并存储可能的后继，之后再对整个代码数组进行分析即可。
 
 生成内部表示代码的数组之后，对每一个函数进行活性分析，产生每个变量的活跃区间，然后对代码进行优化，得到优化后的代码后用线性扫描进行寄存器分配，最终生成Tigger代码。
 
@@ -241,23 +301,105 @@ struct myfunction{
 
 \subsection{优化代码}
 
-总的来说这部分很多是给之前Eeyore填坑……我的优化步骤是：单步窥孔优化$\rightarrow$复写传播$\rightarrow$无用代码消除$\rightarrow$if表达式优化$\rightarrow$表达式计算
+总的来说这部分很多是给之前Eeyore填坑……我的优化步骤是：单步窥孔优化$\rightarrow$复写传播$\rightarrow$无用代码消除$\rightarrow$if表达式优化$\rightarrow$代码外提$\rightarrow$表达式计算。其中每个步骤我都是把每条语句看作单独的基本块，复杂度上来说也是够用的。
 
 \begin{itemize}
   \item 窥孔优化：前一步生成的代码有许多$b = a, c = b$性质的语句；我的处理方法是是判断b的活跃区间是否只在这两句话，如果是的话直接删除并替换即可；
-  \item 复写传播：如果前面有同样引用一个变量的话，直接替换掉，能给之后死代码消除提供空间
-  \item 无用代码消除：遇到无用的变量或表达式，直接删除即可（用活跃区间判断也可）
-  \item if表达式优化：同样是优化前一步Eeyore生成的坑，原本在if中只有$if a == 0 goto$类型的，在这里把逻辑表达引入了if语句之中，也节省了语句和寄存器
+  \begin{lstlisting}
+  T1 = a + b;
+  T2 = T1;
+  优化前
+  T1 = a + b;
+  T2 = T1;
+  优化后
+  \end{lstlisting}
+  \item 复写传播：对每条赋值的语句，在一个基本块中之后对其def之前所有变量用其左值替换，为给之后死代码消除提供空间；（保证正确性在基本块中优化即可）
+  \begin{lstlisting}
+  T1 = T2;
+  T3 = T1;
+  优化前
+  T1 = T2;
+  T3 = T2;
+  优化后
+  \end{lstlisting}
+  \item 无用代码消除：此处描述的无用代码代表两层含义：一是没有use过的变量，二是goto等造成的不可能执行的表达式。对于情况一，直接用活跃区间判断即可（上面的复写传播也会给优化提供空间）；情况二将goto代码进行分析，goto后面的到label之间的代码可以直接删除。
+  \begin{lstlisting}
+  a = 2
+  goto l2
+  blablabla
+  l1
+  优化前
+  goto l2
+  l1
+  优化后
+  \end{lstlisting}
+  \item if表达式优化：同样是优化前一步Eeyore生成的坑，原本在if中只有$if a == 0 goto$类型的，在这里把逻辑表达引入了if语句之中，节省了代码数量和寄存器
+  \begin{lstlisting}
+  T1 = T2 < T3
+  if T1 == 0 goto l2
+  优化前
+  if T2 >= T3 goto l2
+  优化后
+  \end{lstlisting}
   \item 表达式计算：如果一个表达式是二元或单元常数运算，那么编译器直接算出来就可以
+  \begin{lstlisting}
+  T1 = 1 * 4
+  优化前
+  T1 = 4
+  优化后
+  \end{lstlisting}
+  \item 代码外提：对循环不变量的外提也是重要的一个步骤。我的方法算是初步的数据流分析（山寨版）
+  \begin{itemize}
+    \item 首先是要生成每个基本块的ud链：方程:$$in[B] = \cup_{pre} out[B], out[B] = gen[B] \cup (in[B] - kill[B])$$其中gen和kill代表每一句生成的语句和失效的表达式，这里因为基本块以语句为单位，gen就为本身，kill为定义了此语句左值的所有语句。用bitset记录各个值，与活性区间相似的方法迭代得出ud链。
+    \item 之后提取循环块：用模式匹配方法：从label到对应的goto代表一个循环，得出循环块。这样得出的循环在循环嵌套中是由大到小的，从父级块中先提取。
+    \item 但是如果要把每一个不变量都提出去的话，会是非常麻烦的操作。为了保证正确性，我只考虑了define都在循环之外的语句：分析每一个语句的ud链，若全部在循环体之外，则将它移到循环之前。
+  \end{itemize}
+
+  \begin{lstlisting}[basicstyle=\listingsfont,caption={函数结构},captionpos=b]
+  for(int i = 0;i < blocks.size();i++)
+  {
+    int end = -1;
+    if(blocks[i].type == iLABEL)
+    {
+      for(int j = i + 1;j < blocks.size();j++)
+      {
+        if(blocks[j].type == iGOTO && blocks[j].arg1 == blocks[i].arg1)
+        {
+          end = j;
+          break;
+        }
+      }
+    }//找出循环块（保证循环块结构是一个模式）
+    if(end == -1)
+    continue;
+    for(int j = i;j < end;j++)
+    {
+      int flag = 0;
+      for(int k = i;k < end;k++)
+      {
+        if(blocks[j].ud_chain[k]) flag = 1;
+      }
+      if(flag == 0)
+      {
+        block tmp = blocks[j];
+        blocks.erase(blocks.begin() + j);
+        blocks.insert(blocks.begin() + i,tmp);
+      }
+    }//不变量外提
+  }
+  \end{lstlisting}
 \end{itemize}
 
 \subsection{寄存器分配}
 
-现在大家主要都是采用的线性扫描算法，与原本的图染色相比代码好写了许多，性能根据观察也没有很大的损失，同时性能也有很大提高($O(n)$)。具体的算法就是根据活跃区间结束位置排序，贪心地将每个寄存器分配给相应的变量，当变量不活跃时释放寄存器，给下一个变量留出空间。对于必须溢出的变量我直接把它放到了一个固定的寄存器中，与原本的实现没有太大的损失（其实构造这么复杂的例子还是很难的）。
+现在大家主要都是采用的线性扫描算法，与原本的图染色相比代码好写了许多，性能根据观察也没有很大的损失，同时性能也有很大提高($O(n)$)。具体的算法如下：
+
+根据活跃区间结束位置排序，贪心地将每个寄存器分配给相应的变量，当变量不活跃时释放寄存器，给下一个变量留出空间。如果需要溢出，找到其中起点最早的变量，对它进行溢出，将寄存器分配给新变量即可。然而由于寄存器非常的多，构造复杂的例子还是很难的。
 
 在RiscV的23个可用寄存器中，为了提高性能和解决奇怪的Tigger语法问题（Reg和Immediate计算)，我将三个寄存器固定了用途：
 \begin{itemize}
   \item s8专门存储数字4，处理数组地址问题（取值时都会乘4）
+  \emph{后面用位移运算改进了，完全可以不需要这一个，但是Tigger模拟器不能做相乘的操作就保留了下来}
   \item s9专门存储立即数1，做与寄存器的二元运算
   \item s10专门存储立即数2，做与寄存器的二元运算（其实可以删除因为立即数与立即数计算已经被优化了）
   \item s11专门存储临时的地址，处理数组地址问题
@@ -268,7 +410,7 @@ struct myfunction{
 
 问题主要出在寄存器的分配。虽然每个变量对应寄存器有了，但是对应到每个语句就需要判断是否应该load或store。我的方法是就是线性扫描代码，在扫描过程中保存每个变量和寄存器的状态（如上面的结构体），并根据变量是否活跃的状态store/load相应的寄存器。
 
-主要的困难就是调用函数时对栈帧的处理。调用函数时，记录之前的param命令，将caller-saved寄存器的值load到内存/栈中，然后把参数传到寄存器中（顺序不能变化）。每个函数开头还需要保存callee-saved寄存器，为了减小开销我们都只是保存/恢复活跃的寄存器。其他的细节都在代码里，在此就不再赘述了。
+另外的困难就是调用函数时对栈帧的处理。调用函数时，记录之前的param命令，将caller-saved寄存器的值load到内存/栈中，然后把参数传到寄存器中（顺序不能变化）。每个函数开头还需要保存callee-saved寄存器，为了减小开销我们都只是保存/恢复活跃的寄存器。其他的细节都在代码里，在此就不再赘述了。
 
 \subsection{优化效果}
 这里我使用了自己写的qsort和原本课程设计者提供的wseq，分别统计优化前和优化后的Tigger代码长度和运行时用translate得出的实际指令数。
@@ -288,39 +430,109 @@ struct myfunction{
 wseq测试量过大，没有实际在模拟器上测试。RiscV实际运行指令数相对改进不大的缘故，应该是运行时环境占了大多数指令（尤其是系统调用的printf函数什么的）。总体来看优化还是能起到比较显著的效果。
 \section{Tigger}
 
-从Tigger到RiscV相对来说比较简单，根据表格提供的代码一条一条翻译过去就好。有一些命令没有提供，我填补之后的结果附在了后面。
+从Tigger到RiscV相对来说比较简单，我实现的是32位版本的RiscV，指针和int大小是一样的，带来了很多方便。根据表格提供的代码一条一条翻译过去就好。有一些命令没有提供，我填补之后的结果附在了后面。
 
-% \begin{table}[ht]
-% \caption{翻译表}
-% \label{my-label}
-% \begin{tabular}{|l|l|}
-% \hline
-% function {[} int1 {]} {[} int2 {]} & \begin{tabular}[c]{@{}l@{}}.text\\ .align 2 \\ .global function \\ .type @function,\\ function: \\ add sp,sp,-stk\\ sw ra stk-4(sp)\\ stk = ( int2 / 4 +1 ) * 16\end{tabular} \\ \hline
-% end function & \begin{tabular}[c]{@{}l@{}}.size function, .-function\\ stk = 0\end{tabular} \\ \hline
-% global\_var = malloc int & .comm global\_var,int*4,4 \\ \hline
-% global\_var = int & \begin{tabular}[c]{@{}l@{}}.global v0 \\ .section .sdata \\ .align 2 \\ .type v0, @object \\ .size v0, 4,\\ v0:\\ .word int\end{tabular} \\ \hline
-% reg = integer & li reg,integer \\ \hline
-% reg1 = reg2 op reg3 & op reg1,reg2,reg3 \\ \hline
-% \&\& & \begin{tabular}[c]{@{}l@{}}seqz reg1,reg2\\ add reg1,reg1,-1\\ and reg1,reg1,reg3\\ snez reg1,reg1\end{tabular} \\ \hline
-% || & \begin{tabular}[c]{@{}l@{}}or reg1,reg2,reg3 \\ snez reg1,reg1\end{tabular} \\ \hline
-% != & \begin{tabular}[c]{@{}l@{}}xor reg1,reg2,reg3 \\ snez reg1,reg1\end{tabular} \\ \hline
-% reg1 = reg2 & mv \\ \hline
-% reg1 {[} int {]} = reg2 & sw \\ \hline
-% reg1 = reg2 {[} int {]} & lw \\ \hline
-% if reg1 op reg2 goto Label & op reg1,reg2,.label \\ \hline
-% goto label & j label \\ \hline
-% label: & .label: \\ \hline
-% call function & call function \\ \hline
-% store reg int & sw reg,int*4(sp) \\ \hline
-% load int reg & lw reg,int*4(sp) \\ \hline
-% load global\_var reg & \begin{tabular}[c]{@{}l@{}}lui reg,\%hi(global\_var)\\ lw reg,\%lo(global\_var)(reg)\end{tabular} \\ \hline
-% loadaddr int reg & add reg,sp,int*4 \\ \hline
-% loadaddr global\_var reg & \begin{tabular}[c]{@{}l@{}}lui reg,\%hi(global\_var)\\ add reg,reg,\%lo(global\_var)\end{tabular} \\ \hline
-% return & \begin{tabular}[c]{@{}l@{}}lw ra,stk-4(sp)\\ add sp,sp,stk\\ jr ra\end{tabular} \\ \hline
-% \end{tabular}
-% \end{table}
-%
-% \subsection{实现细节}
+\newpage
+\subsection{BNF}
+
+\begin{typewriterfont}
+\begin{grammar}
+<Goal>  ::= (FunctionDecl | GlobalVarDecl)*
+
+<GlobalVarDecl> ::= <VARIABLE> '=' <INTEGER>
+\alt <VARIABLE> '=' 'malloc' <INTEGER>
+
+<FunctionDecl> ::= Function '['<INTEGER>']' '['<INTERGER>']' (Expression)* 'end' Function
+
+<Expression>	::=	Variable '=' Reg OP2 Reg
+\alt Reg '=' Reg OP2 <INTEGER>
+\alt Reg '=' OP1 Reg
+\alt Reg '=' Reg
+\alt Reg '=' <INTEGER>
+\alt Reg '[' <INTEGER> ']' = Reg
+\alt Reg = Reg '[' <INTEGER> ']'
+\alt 'if' Reg LogicalOP Reg 'goto' Label
+\alt 'goto' Label
+\alt Label ':'
+\alt 'call' Function
+\alt 'store' Reg <INTEGER>
+%\alt 'store' Reg <VARIABLE>
+\alt 'load' <INTEGER> Reg
+\alt 'load' <VARIABLE> Reg
+\alt 'loadaddr' <INTEGER> Reg
+\alt 'loadaddr' <VARIABLE> Reg
+\alt 'return'
+
+<Reg> ::= 'x0'
+| 's0'
+| 's1'
+| 's2'
+| 's3'
+| 's4'
+| 's5'
+| 's6'
+| 's7'
+| 's8'
+| 's9'
+| 's10'
+| 's11'
+| 'a0'
+| 'a1'
+| 'a2'
+| 'a3'
+| 'a4'
+| 'a5'
+| 'a6'
+| 'a7'
+| 't0'
+| 't1'
+| 't2'
+| 't3'
+| 't4'
+| 't5'
+| 't6'
+
+<Label> ::= <LABEL>
+
+<Function> ::= <FUNCTION>
+
+\end{grammar}
+\end{typewriterfont}
+
+\begin{table}[ht]
+\caption{翻译表}
+\label{my-label}
+\begin{center}
+
+  \begin{tabular}{|l|l|}
+  \hline
+  function {[} int1 {]} {[} int2 {]} & \begin{tabular}[c]{@{}l@{}}.text\\ .align 2 \\ .global function \\ .type @function,\\ function: \\ add sp,sp,-stk\\ sw ra stk-4(sp)\\ stk = ( int2 / 4 +1 ) * 16\end{tabular} \\ \hline
+  end function & \begin{tabular}[c]{@{}l@{}}.size function, .-function\\ stk = 0\end{tabular} \\ \hline
+  global\_var = malloc int & .comm global\_var,int*4,4 \\ \hline
+  global\_var = int & \begin{tabular}[c]{@{}l@{}}.global v0 \\ .section .sdata \\ .align 2 \\ .type v0, @object \\ .size v0, 4,\\ v0:\\ .word int\end{tabular} \\ \hline
+  reg = integer & li reg,integer \\ \hline
+  reg1 = reg2 op reg3 & op reg1,reg2,reg3 \\ \hline
+  \&\& & \begin{tabular}[c]{@{}l@{}}seqz reg1,reg2\\ add reg1,reg1,-1\\ and reg1,reg1,reg3\\ snez reg1,reg1\end{tabular} \\ \hline
+  || & \begin{tabular}[c]{@{}l@{}}or reg1,reg2,reg3 \\ snez reg1,reg1\end{tabular} \\ \hline
+  != & \begin{tabular}[c]{@{}l@{}}xor reg1,reg2,reg3 \\ snez reg1,reg1\end{tabular} \\ \hline
+  reg1 = reg2 & mv \\ \hline
+  reg1 {[} int {]} = reg2 & sw \\ \hline
+  reg1 = reg2 {[} int {]} & lw \\ \hline
+  if reg1 op reg2 goto Label & op reg1,reg2,.label \\ \hline
+  goto label & j label \\ \hline
+  label: & .label: \\ \hline
+  call function & call function \\ \hline
+  store reg int & sw reg,int*4(sp) \\ \hline
+  load int reg & lw reg,int*4(sp) \\ \hline
+  load global\_var reg & \begin{tabular}[c]{@{}l@{}}lui reg,\%hi(global\_var)\\ lw reg,\%lo(global\_var)(reg)\end{tabular} \\ \hline
+  loadaddr int reg & add reg,sp,int*4 \\ \hline
+  loadaddr global\_var reg & \begin{tabular}[c]{@{}l@{}}lui reg,\%hi(global\_var)\\ add reg,reg,\%lo(global\_var)\end{tabular} \\ \hline
+  return & \begin{tabular}[c]{@{}l@{}}lw ra,stk-4(sp)\\ add sp,sp,stk\\ jr ra\end{tabular} \\ \hline
+  \end{tabular}
+\end{center}
+\end{table}
+
+\subsection{实现细节}
 
 在翻译过程中我发现用移位操作代替乘法能够减小指令强度，尤其是对于大量对数组地址乘4.于是我直接采用了slli左移两位代替。不过现在我对RiscV的基本指令还不是特别理解，伪指令在手册中并没有特别多的说明，还需要自己发掘基本指令的关系，希望以后的课程上可以稍微增多讲解。
 
@@ -339,11 +551,11 @@ wseq测试量过大，没有实际在模拟器上测试。RiscV实际运行指�
 \subsection{一些有趣的Bug}
 \begin{itemize}
   \item 传参顺序问题
-  在param时把变量加载到参数中的操作要放在最后，否则就有可能出现变量加载无效的情况
+  在param时把变量加载到寄存器中的操作要放在最后，否则就有可能出现变量加载无效的情况
   \item Spill和GetReg会出奇怪的事情
-  最主要解决的还是这部分的各种问题，不该处理的Spill，该处理的没有Load什么的……最麻烦的部分
+  最主要解决的还是这部分的各种问题，不该处理的Spill，该处理的没有Load什么的……我花费了很多精力在这部分的处理
   \item 环境问题
-  Mac下能通，Linux不行…原来是变量初始化的原因
+  Mac下能通，Linux下出现问题。问题是某些变量初始化Linux默认非零；有些环境下Yacc和Bison支持的特性不一样，会出现编译错误。
 \end{itemize}
 
 \begin{lstlisting}[basicstyle=\listingsfont]
@@ -444,6 +656,7 @@ int main()
 
 \section{对课程的建议}
 毕竟是第一年的课程改革，这学期的课程的确有一些不完善之处。但总体来说在老师和助教的帮助下，整个过程还是非常顺利完成了。
+
 \subsection{关于开发环境}
 现在很大的问题是测试与开发环境的融合。辛苦助教了一学期用原始的FTP+脚本+邮件进行测试，对教学双方都不是很方便。每节课很多时间都是浪费在同学与助教交流如何测试和测试结果之类的问题，消耗了大量的时间。
 
@@ -451,243 +664,28 @@ int main()
 
 我的建议是统一一下测试环境，在实验室机器上提供独立的Docker或独立的账户供同学们使用。然后在测试上希望写一个Web端的平台让同学们提交tar包就可以，并将结果实时反馈出来，还可以增加排行榜提高课程的趣味性。尤其是提供小样例能给对某个特定功能差错或优化提供更大的便利。
 
-\subsection{模拟器的问题}
-总体来说模拟器还是非常优秀的，没有遇到特别大的问题。遇到的问题一个是对大数组的处理不太好，有时候会使程序崩溃；其二是对逻辑运算符的支持有一点问题，使用Tigger输入小于等于号的话会有错误的发生。
+\subsection{关于模拟器}
+总体来说模拟器还是非常优秀的，没有遇到特别大的问题。遇到的问题一个是对大数组的处理不太好，有时候会使程序崩溃；其二是对逻辑运算符的支持有一点问题，使用Tigger输入小于等于号的话会有错误的发生。其三是Eeyore里面的param不能传递立即数。
 
+\subsection{其它感想}
+和老师的交流了很多，主要想法还是加强与理论课的联系。理论课的进度和实习课不大相符，主要有难度的寄存器分配部分理论课没有过多讲解，编译器的前端理论课上花了很多精力讲解。
 
-%
-%
-% 目前北京大学的编译原理（编译技术）课程与编译实习课程，是形式上独立而实际上紧密结合的两门课程。编译原理主要讲授理论，编译实习主要动手实践。
-%
-% 编译原理课程前半学期主要讲：正则表达式与自动机、词法分析、上下文无关的语法分析、语法制导翻译。后半学期主要讲：中间代码生成、运行时环境、寄存器分配、代码优化。
-%
-% 编译实习课程的任务是实现一个MiniJava的编译器，以巩固编译原理课程上学到的知识。总体流程是：MiniJava $\rightarrow$ Piglet $\rightarrow$ Spiglet $\rightarrow$ Kanga $\rightarrow$ MIPS。
-%
-% \subsection{MiniJava任务的一些缺陷}
-%
-% 由于课程内容设计和选课系统的一些原因，还无法将这两门课合并成一门课，而且两门课程在进度上有些不协调。由于编译原理与编译实习两课程联系紧密，同学们通常在同一学期同时选修这两门课程。根据之前同学们的反映，两门课经常出现进度差异问题，比如实习课要用到的技术在原理课上还没有讲，实习课前半学期基本只做前端工作导致后半学期工作量过大等等。
-%
-% MiniJava任务是同学单人完成，同学们可能头一次面对这样的大项目，做起来可能有些吃力。但对于一些能力较强的同学，也可能觉得任务有些简单。
-%
-% 在MiniJava编译器整体任务由词法分析、语法分析、寄存器分配等多个小任务组成，小任务间环环相扣，同学们如果在之前的某一环没有完成好，可能影响之后代码编写和完成进度。
-%
-% 另外，编译课程不要求先修Java程序设计，而MiniJava虽然语法不复杂，但其编译器要求用Java实现，对于没有接触过Java的同学有些不友好。
-%
-% \subsection{课程改革}
-%
-% 我们设计出一套全新的MiniC编译器框架，以替代当前编译实习课程使用的MiniJava，来解决编译课程目前面临的一系列问题。并希望能与信息科学技术学院的体系结构实习、操作系统实习等课程的改革结合，帮助学生更好地理解计算机科学与技术。
-%
-% 编译实习课程改革的目标主要有三点。
-%
-% 一，在一定程度上降低门槛，让能力不太强的同学也能顺利完成任务，体验编译器的编写流程，对于能力较强的同学，提供一些可选的扩展内容。
-%
-% 二，尽可能配合编译原理课程进度，更合理地进行任务分配。
-%
-% 三，使任务模块化，单独对某一阶段知识点进行实践测试，对于先前已经做完的任务，提供标准模块，避免项目前面遗留问题对后期进度的影响。
-%
-% \newpage
-% \section{MiniC编译器}
-%
-% \subsection{概述}
-%
-% MiniC编译器的目标是把MiniC语言一步一步转化成合法的32位RISC-V汇编。
-%
-% MiniC编译器，除了MiniC语言外，还涉及Eeyore和Tigger两种中间语言，和最终要输出的RISC-V汇编。
-%
-% MiniC编译器总共有3个必要大步骤，总体流程是：MiniC $\rightarrow$ Eeyore $\rightarrow$ Tigger $\rightarrow$ RISC-V。
-%
-% MiniC, Eeyore, Tigger的设计都遵循简洁易读的原则，方便同学处理。同学们没必要使用Eeyore或Tigger的全部语法，如果觉得使用它们的某个子集就能完成任务也是可以的。%（其实我们认为Eeyore和Tigger已经高度精简，没必要再取子集了）
-%
-% Eeyore和Tigger这两个名称，继承了MiniJava编译器中使用到的Piglet和Kanga的命名传统。都取自同一动画``Winnie Pooh"。
-%
-% \begin{center}\includegraphics[width=15cm]{name} \end{center}
-%
-% 据了解，以往同学们MiniJava编译器编写时遇到的困难主要有三点：课程进度问题、类型检查复杂琐碎、寄存器分配算法有难度。我们的解决方案分别是，重新安排课程进度使之与原理课程匹配，减少数据类型的数量，推荐一些更好写的寄存器分配算法（相比原理课上讲的图染色法）。
-%
-% \subsection{MiniC}
-%
-% MiniC是C语言的一个子集，我们对C语言进行了大量的删减，力图产生一种高度精简的、易于实现的语言。对于MiniC的语言定义与描述，参考附录中的“MiniC说明”。
-%
-% MiniC编译器的第一步，是实现MiniC语言的词法分析和语法分析（可以利用lex和yacc等工具），并分析语义，将MiniC转换成Eeyore中间语言。
-%
-% MiniC的类型只有int和一维int数组，极大地减小了类型检查的工作量。
-%
-% \subsection{Eeyore}
-%
-% Eeyore是一中三地址码，为了让同学们易于接受，Eeyore的语法是编译原理课程教学用书（龙书）中使用的三地址码格式的扩展。具体描述参考附录中的“Eeyore说明”。
-%
-% Eeyore可以看作是MiniC编译器中的Piglet和Spiglet。
-%
-% 在这一步，要做的是优化（可选）和寄存器分配工作。输入Eeyore代码，输出Tigger格式的中间代码。
-%
-% \subsection{* 优化}
-%
-% 优化阶段不是必须的，有能力的同学可以选做。在考核方面，可单独对产出的Eeyore的运行速度进行测试。
-%
-% 编译优化阶段的输入和输出格式都是Eeyore。
-%
-% \subsection{Tigger}
-%
-% Tigger可以被认为是Eeyore进行了寄存器分配后的版本，与Eeyore语法很像。具体描述参考附录中“Tigger说明”。
-%
-% Tigger可以看作是MiniC编译器中的Kanga。
-%
-% 在这一步，要做的是把Tigger代码转换为RISC-V汇编。这几乎是一句对应一句的简单文本处理了。
-%
-% \subsection{RISC-V}
-%
-% 生成合法的RISC-V汇编之后，同学们要做的所有工作就完成了。
-%
-% 我们会调用riscv-gcc把生成的RISC-V汇编转成机器码。
-%
-% 最终使用RISC-V的模拟器运行机器码，并进行最终的整体测试。（中间步骤的完成情况使用我们编写的Eeyore和Tigger模拟器进行阶段性测试）
-%
-% \subsection{进度安排}
-%
-% 根据我们小组完成各阶段所用的时间，我们对同学们的MiniC编译器任务做了如下初步进度安排。（我们小组的完成进度在下一节）
-%
-% 第1--2周：努力学习编译原理，并预习语法制导翻译部分，并尝试学习安装riscv-gcc。
-%
-% 第3--7周：完成MiniC$\rightarrow$Eeyore。具体地说，第3周实现符号表与类型检查，第4周完成词法分析，第5周完成文法书写，第6周处理表达式翻译，第7周处理控制流翻译。
-%
-% 第8--11周：完成Eeyore$\rightarrow$Tigger。具体地说，第8周完成Eeyore的语法树构建，第9周实现活性分析，第10周实现寄存器分配，第11周输出Tigger代码。
-%
-% 第12--13周：完成Tigger$\rightarrow$RISC-V。包括熟悉RISC-V汇编和输入输出格式处理。
-%
-% 第14周：编写实验报告。
-%
-% 可以看出，以上时间安排没有占满整个学期的时间，这是考虑到同学们有期中期末考试以及假期，预留出了2周左右的时间。根据我们自己的经验，主要的难度在于Eeyore和Tigger的产生，而最后一步相对比较容易，所以还可以有一周时间用于活动安排或者用于扩展内容或程序优化。
-%
-% \newpage
-% \section{工作完成情况}
-%
-% \subsection{MiniC方面}
-% \begin{itemize}
-% 	\item 完成MiniC语法制定
-% 	\item 完成MiniC的parser
-% \end{itemize}
-%
-% 前半学期花了很多时间实现了复杂MiniC语法的parser，几乎是把所有扩展内容都实现了。
-%
-% parser使用on-the-f\/ly翻译模式，维护了一个极复杂但表达能力很强的符号表，如果只是翻译base语法集可以删去很多没必要的类型与检查。
-%
-% parser编写过程中遇到了C语言中不区分布尔表达式与其他表达式的问题，这会使原理课上学的回填技术无法使用。为了解决这个问题parser放弃了回填技术，但仍用on-the-f\/ly翻译模式，只是先计算表达式的值，然后再进行逻辑判断。这样做使得遇到逻辑表达式时产出的代码略冗长，但确实解决了问题，也能正确处理\texttt{||}与\texttt{\&\&}短路跳转。为了让同学们方便处理，base语法集限定布尔表达式不可以是算术表达式。
-%
-% 另外，C语言的文法（用lex和yacc表示的）可以直接从网上找到，我们希望同学们能自己完成MiniC文法的编写，不要直接抄网上现成的lex和yacc代码。
-%
-% \subsection{Eeyore方面}
-%
-% \begin{itemize}
-% 	\item 完成Eeyore语法制定
-% 	\item 完成Eeyore模拟器
-% 	\item 完成Eeyore上的寄存器分配算法，把Eeyore转化成Tigger
-% \end{itemize}
-%
-% 即使是在已经简化过的 Eeyore 文法上，也是较为复杂一步。预处理使用了 lex + yacc，建出符号表。寄存器分配使用了 Linear Scan 算法，相较于之前的 web + 图染色算法，大大简化。
-%
-% 这步比较麻烦的是在最后生成 Tigger 代码的时候，会有许多特殊情况。寄存器与变量之间的关系较为混乱，稍有不慎就会写错。另一个难点是处理数组，这里需要对数组，地址等概念非常清晰。
-%
-% 处理种种特殊情况时，为了代码实现的更简明一些，在某些细节上会产生一些浪费现象。处理这些细节也是一个有技术难度的工作，可以考虑作为扩展内容。
-%
-% 关于 Linear Scan 算法的详细说明，详见 Linear Scan 的说明文档。
-%
-% \subsection{Tigger方面}
-%
-% \begin{itemize}
-% 	\item  完成Tigger语法制定
-% 	\item  完成Tigger模拟器
-% 	\item  完成Tigger转为RICS-V汇编
-% \end{itemize}
-%
-% Tigger模拟器的实现，先利用lex和yacc构建语法树（其实基本是一条链），在运行之前给全局变量赋值，然后从\texttt{f\_main}开始执行，执行过程中维护栈和寄存器的值。
-%
-% 由于Tigger语法很简单，模拟器实现起来没什么困难。
-%
-% Tigger模拟器同Eeyore模拟器一样，也实现了调试功能，帮助同学们调试寄存器分配算法。
-% \\
-%
-% \subsection{评测方面}
-% \begin{itemize}
-% 	\item 完成测试平台搭建
-% 	\item 完成测试程序以及测试数据构造
-% \end{itemize}
-%
-% 测试程序都是些MiniC程序，这些程序有大有小，可以比较全面地对编译器的正确性和产出代码的质量进行测试。但是因为我们对编译测试的原理不太熟悉，所以测试程序可能设计的有一些缺陷，这一点我们可以之后进一步修正。
-%
-% 对于每个MiniC测试程序，我们都构造了一些测试数据，每个测试数据包括一个输入文件和一个答案文件。
-%
-% 我们没有专门构造Eeyore和Tigger的测试集，因为同学们有可能不会用到Eeyore和Tigger的全部语法。因此，Eeyore和Tigger的测试程序应由MiniC的测试程序经过转化而来，测试数据与之前的相同。
-%
-% 评测平台我们使用的是CMU开源的Autolab测试平台，也就是我们学校著名的ICS课程使用的测试平台，实现在线测评和统计成绩。
-%
-% \subsection{计划与现实}
-%
-% 说实话，没想到选编译实习课程改革这个题目会有这么大的任务量，时间很紧张。虽然每个小任务的不太难，但任务数量很多。
-%
-% 按照开题时的计划，期中前基本要把完整的编译器做出来，期中后实现一些工具和测试脚本，设置扩展内容。
-%
-% 事实上，在期中前，我们用了大量时间设计了一套比现在看到的复杂得多的MiniC和三地址码，并完成实现了它们的parser和模拟器。
-%
-% 中期报告后紧接着的一两周，小组三人都忙于各种考试与其他任务，没时间写代码。在老师与助教的指点下，意识到同学们不太可能实现这么复杂的语法，就在这段时间制定了一套从头到尾全新的MiniC,Eeyore,Tigger语法，明确了之后要做的工作。
-%
-% 现在看来，在期中前我们相当于实现了大部分扩展内容，体验了一把复杂的扩展内容是多么难写。
-%
-% 最后的几周，完成的工作比较多。为提供运行效率重写了Eeyore模拟器。为了减轻同学们的负担，也为了小组能尽快完成任务，学习并实现了Linear Scan寄存器分配算法。编写了Tigger模拟器。测试程序和测试数据集，搭建了测试平台。
-%
-% \newpage
-% \section{写给后来人}
-%
-% 在实践过程中，我们深切体会到课程改革之不易。我们的工作也许只是改革的一个开端，想真正投入教学，还需实践检验。我们在这里记录下编译实习课程改革的一些经验，希望能对之后投身这项课程改革的人们有些许启发。
-% \\
-%
-% Eeyore模拟器和Tigger模拟器可作为测试工具提供给同学，完成的MiniC编译器的三大步骤的代码，可以用作标准模块。
-%
-% 如果不使用标准模块，同学们可以只使用Eeyore和Tigger语言的一个子集，把自己产出的那个子集翻译好就可以正确地产生RISC-V代码了。如果同学在前面的某个步骤没能顺利完成，那么把标准模块提供给他时，他可能会面临标准模块产出的代码超出了他原本使用的那个子集这样的问题。
-%
-% 我们小组只保证标准模块之间能正确拼接成一个正确的编译器，同学们写的模块与标准模块拼接时可能会出现不兼容的问题，因为我们目前手上只有自己写的标准模块，还无法做这方面的测试工作。
-% \\
-%
-% MiniC语法扩展内容，也许无法被翻译成Eeyore或Tigger代码，这是因为Eeyore和Tigger是专门为MiniC的base语法集制定的，无法表达一些base以外的语法。所以对于想做MiniC语法扩展内容的同学，只能对扩展内容单独测试，同学们要想办法把扩展的部分最终转成RISC-V，比如可以自行扩展Eeyore和Tigger的语法使它们支持扩展内容。
-% \\
-%
-% 同学们若想本地测试自己生成的RISC-V汇编是否正确，需要先下载并编译riscv-tools，再利用riscv-gcc生成机器码，最后用RISC-V的模拟器来运行。在我们小组编译riscv-tools的过程中，遇到了大量奇怪的编译错误，RISC-V官方并没有给出多少对于这些编译错误的说明，致使我们花费了不少时间来解决这些错误。我想同学们在尝试编译riscv-tools的时候，也许会觉得很头大。
-%
-% \newpage
-% \section{收获}
-%
-% \noindent 李佳蔚：
-%
-% 第一个收获是把之前编译技术没学明白的东西都彻底搞明白了。编译实习这门课的特点就是如果不彻底搞明白原理，根本没法写代码。发明Eeyore和Tigger语法的过程也对自己的能力有很大提高。发明一种语言比使用一种语言，对理解的要求高得多。
-%
-% 第二个收获是积累了很多与一个小团队一起合作写工程的经验。这是我第一次写比较大的工程，所以在这期间学到了许多写工程的基本常识和技巧，这种能力的提高在将来发展中也一定会有很大帮助。
-%
-% 第三个也是最大的收获就是完成了一件富有现实意义的工作。真心希望该项目能作为课程改革的一个起点，最终惠及广大信科师生。
-%
-% \bigskip
-% \noindent 梁家硕：
-%
-% 巩固了编译技术课程上学到的知识，一些看起来不难的算法，其实实现起来细节很多，必须亲身实践才能透彻领悟。
-%
-% 小组合作使我深切体会到团队的力量。项目的任务量比较大，团队的协作与沟通给了我很大的鼓舞，两位队友的表现很出色，让我有信心能把自己的任务完成。
-%
-% 从前对汇编几乎一窍不通，该项目的工作使我头一次接触到RISC-V汇编，也许对今后的学习有所帮助。
-%
-% 参与教学改革、提高教学质量，大概之前做梦也想不到会做这样的项目吧。当了一回课程设计者，不仅对该课程有了更多的理解，也对“教育”与“学习”本身的有了不同于从前的认识。
-%
-% \bigskip
-% \noindent 李汪洋：
-% 两位小同学代码能力很强，我只是实力打酱油，总的来说算是把四大礼包选完了，也算是把去年体系课学到的一些东西用上了，学会了使用Lex/Yacc来写东西，感觉还是蛮有意思的。
-%
-% 项目大体上是做完了，但是还有一些细节的东西应该还要完善，可能还需要后续维护一下。
-%
-% \newpage
-% \section{附录}
-% 以下内容是完整的MiniC、Eeyore、Tigger语法描述与定义。
-%
-% 三种语言都有各自的文档，内容与以下部分相同。三个分离的文档可提供给同学们，以便查阅。
-% \input{report_MiniC}
-% \newpage
-% \input{report_Eeyore}
-% \newpage
-% \input{report_Tigger}
+然后有可能调整一下进度：目前前端部分相对来说比较简单，而留给大家的时间稍微长了些，可以在第一个月就尽量做完，重点放在中间代码部分，并在课上给大家细致地讲解。
+
+\section{个人收获}
+从0开始到完整的编译器的过程充满了艰辛，同时也学到了很多。
+\begin{itemize}
+  \item 付诸理论于实践
+
+  曾经学习编译原理主课的时候，对于后半部分的代码优化和SDT没有很明白，很多题目不用遵循严格的算法都可以做出来，而到了真正的实践中必须遵循严谨的步骤。尤其是每一步的数据流分析，学习的时候并没感受到特别的意义，而在优化中它的功能是无比强大。变量的活性分析和其它优化都依赖着不同分析方法得出的结果，而其中的细微差别在实践中才能更好地理解。
+
+  \item 提升编程能力
+
+  把各个部分代码加起来大约有2400行，如此大的工程量可以说是前所未有的大挑战。还需要熟悉每个工具的功能，将不同模块抽象化，将细小的部分拼接在一起，查找一个符号的小Bug……第一次体验到大工程的感觉。尤其是其中的Eeyore$\rightarrow$Tigger部分，让我Debug能力得到了大幅提高。在这个过程中写bash脚本、使用git、makefile等工具我也初识了门道。
+
+  \item 合作与讨论
+
+  实习课课上风格也画风迥异，老师的讲解并不多，而是以同学们自主交流为主。在和同学、老师、助教讨论之后，许多不理解的问题也有了一些思路，编写代码过程中也参考了同学、助教的许多思路。在这里非常感谢给予我许多帮助的老师同学，蔡佳晋、陈梓立、肖博文等等。
+
+\end{itemize}
 \end{document}

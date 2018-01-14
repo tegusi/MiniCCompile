@@ -55,7 +55,7 @@ using namespace std;
 
 typedef int TokenType;
 #define MAXTOKENLEN 40
-#define MAXVARS 500
+#define MAXVARS 1000
 #define MAXREGS 23
 
 extern int glbID_cnt;
@@ -64,7 +64,7 @@ struct block{
   // int line_num, type;
 	string arg1, arg2, arg3, arg4;
   vector<int> pre;
-  bitset<MAXVARS> def,use,live;
+  bitset<MAXVARS> def,use,live,gen,kill,in,out,ud_chain;
   block(int _type, string _arg1 = "", string _arg2 = "", string _arg3 = "", string _arg4 = ""):
   type(_type),arg1(_arg1),arg2(_arg2),arg3(_arg3),arg4(_arg4) {};
 };

@@ -85,6 +85,58 @@ void liveAnalysis()
         q.push(*i);
       }
   }
+  for(int i = blocks.size() - 1;i >= 0;i--)
+  {
+    blocks[i].gen[i] = 1;
+    int var;
+    for(int j = blocks.size() - 1;j >= 0;j--)
+      if(blocks[i].def[j]) var = j;
+    for(int j = blocks.size() - 1;j >= 0;j--)
+    {
+      if(blocks[j].use[var]) blocks[i].kill[j] = 1;
+    }
+    q.push(i);
+  }
+  while(!q.empty())
+  {
+    int t = q.front();q.pop();
+    block* line = &blocks[t];
+    bitset<MAXVARS> origin = line->out;
+    for(auto i = line->pre.begin();i != line->pre.end();i++)
+    {
+      int j = *i;
+      line->in |= blocks[j].out;
+    }
+    line->out = line->gen;
+    line->out |= line->in & (~(line->kill));
+    if(origin != line->out)
+    {
+      if(line->type == iFBEGIN) continue;
+      if(line->type == iGOTO)
+      {
+        q.push(lblTable[line->arg1]);
+      }
+      else if(line->type == iIF)
+      {
+        q.push(lblTable[line->arg1]);
+        q.push(t+1);
+      }
+      else if(line->type != iFEND) {q.push(t+1);}
+    }
+  }//得到in和out集合
+  for(int i = blocks.size() - 1;i >= 0;i--)
+  {
+    blocks[i].gen[i] = 1;
+    for(int var = 0;var < glb_cnt;var++)
+    {
+      if(blocks[i].use[var])
+      {
+        for(int j = blocks.size() - 1;j >= 0;j--)
+        if(blocks[i].in[j] && blocks[j].def[var])
+          blocks[i].ud_chain[j] = 1;
+      }
+    }
+  }//得到ud_chain
   for(int var = 0;var < glb_cnt;var++)
   {vars[var].st = 63333;vars[var].ed = -1;}
   for(int i = 0;i < blocks.size();i++)
@@ -247,6 +299,37 @@ void optimize()
     }
     else
       ptr++;
+  }
+  for(int i = 0;i < blocks.size();i++)
+  {
+    int end = -1;
+    if(blocks[i].type == iLABEL)
+    {
+      for(int j = i + 1;j < blocks.size();j++)
+      {
+        if(blocks[j].type == iGOTO && blocks[j].arg1 == blocks[i].arg1)
+        {
+          end = j;
+          break;
+        }
+      }
+    }//找出循环块
+    if(end == -1)
+    continue;
+    for(int j = i;j < end;j++)
+    {
+      int flag = 0;
+      for(int k = i;k < end;k++)
+      {
+        if(blocks[j].ud_chain[k]) flag = 1;
+      }
+      if(flag == 0)
+      {
+        block tmp = blocks[j];
+        blocks.erase(blocks.begin() + j);
+        blocks.insert(blocks.begin() + i,tmp);
+      }
+    }//不变量外提
   }
   for(int i = 0;i < blocks.size();i++)
   {
